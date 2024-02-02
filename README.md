@@ -7,4 +7,5 @@ To connect to a MySQL database, this tool requires [a valid connection string](h
 This project's tech stack: C#, .NET, Entity Framework, Pomelo.EntityFrameworkCore.MySql, xUnit, Moq.
 
 The database schema:
+
 ![database schema](docs/database-schema.png)
