@@ -1,4 +1,5 @@
 ﻿using InventoryManager.Data.Entities;
+using InventoryManager.Data.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 using Moq;
 using Xunit;
@@ -88,35 +89,111 @@ namespace InventoryManager.Helpers.Tests
             }
         }
 
-        public class ProductConversionTests
+        public class EntityWithCodeConversionTests
         {
-            [Fact]
-            public void Convert_ExistentProductCodeString_ReturnsSuccess()
+            [Theory]
+            [MemberData(nameof(TestData))]
+            public void Convert_CodeStringOfExistentEntityWithCode_ReturnsSuccess<T>(T value) where T : class, Data.Interfaces.IEntityWithCode, new()
             {
-                var input = "PRODUCT1";
                 var mockDatabaseController = new Mock<IDatabaseController>();
-                Product product = new Product();
-                mockDatabaseController.Setup(x => x.TryReadEntityByCode(input, out product)).Returns(new Result() { IsSuccess = true });
-                var expectedType = typeof(Product);
+                var input = "ENTITY_1";
+                var entity = value;
+                mockDatabaseController.Setup(x => x.TryReadEntityByCode<T>(input, out entity)).Returns(new Result() { IsSuccess = true });
+                var expectedType = typeof(T);
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(Product), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.ConvertStringToType(input, typeof(T), mockDatabaseController.Object, out object actualObject);
 
                 Assert.True(actualResult.IsSuccess);
                 Assert.IsType(expectedType, actualObject);
             }
 
-            [Fact]
-            public void Convert_NonexistentProductCodeString_ReturnsFailure()
+            [Theory]
+            [MemberData(nameof(TestData))]
+            public void Convert_CodeStringOfNonexistentEntityWithCode_ReturnsFailure<T>(T value) where T : class, Data.Interfaces.IEntityWithCode, new()
             {
-                var input = "PRODUCT1";
                 var mockDatabaseController = new Mock<IDatabaseController>();
-                Product product = new Product();
-                mockDatabaseController.Setup(x => x.TryReadEntityByCode(input, out product)).Returns(new Result() { IsSuccess = false });
-                var expectedType = typeof(Product);
+                var input = "ENTITY_1";
+                var entity = value;
+                mockDatabaseController.Setup(x => x.TryReadEntityByCode<T>(input, out entity)).Returns(new Result() { IsSuccess = false });
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(Product), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.ConvertStringToType(input, typeof(T), mockDatabaseController.Object, out object actualObject);
 
                 Assert.False(actualResult.IsSuccess);
+            }
+
+            public static IEnumerable<object[]> TestData()
+            {
+                return new List<object[]>
+                {
+                    new object[] { new Product() },
+                    new object[] { new Category() },
+                    new object[] { new Warehouse() },
+                    new object[] { new Location() }
+                };
+            }
+        }
+
+        public class InventoryEntryConversionTests
+        {
+            [Theory]
+            [MemberData(nameof(ValidUintTestData))]
+            public void Convert_IdOfExistentInventoryEntry_ReturnsSuccess(string stringInput, uint uintInput)
+            {
+                var mockDatabaseController = new Mock<IDatabaseController>();
+                var entity = new InventoryEntry();
+                mockDatabaseController.Setup(x => x.TryReadEntityById<InventoryEntry>(uintInput, out entity)).Returns(new Result() { IsSuccess = true });
+                var expectedType = typeof(InventoryEntry);
+
+                var actualResult = TypeConverter.ConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
+
+                Assert.True(actualResult.IsSuccess);
+                Assert.IsType(expectedType, actualObject);
+            }
+
+            [Theory]
+            [MemberData(nameof(ValidUintTestData))]
+            public void Convert_IdOfNonexistentInventoryEntry_ReturnsFailure(string stringInput, uint uintInput)
+            {
+                var mockDatabaseController = new Mock<IDatabaseController>();
+                var entity = new InventoryEntry();
+                mockDatabaseController.Setup(x => x.TryReadEntityById<InventoryEntry>(uintInput, out entity)).Returns(new Result() { IsSuccess = false });
+                
+                var actualResult = TypeConverter.ConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
+
+                Assert.False(actualResult.IsSuccess);
+            }
+
+            [Theory]
+            [MemberData(nameof(InvalidUintTestData))]
+            public void Convert_InvalidUintId_ReturnsFailure(string stringInput)
+            {
+                var mockDatabaseController = new Mock<IDatabaseController>();
+                var entity = new InventoryEntry();
+                // Value of uintInput is irrelevant as execution should never reach TryReadEntityByCode in this case
+                var uintInput = 1u;
+                mockDatabaseController.Setup(x => x.TryReadEntityById<InventoryEntry>(uintInput, out entity)).Returns(new Result() { IsSuccess = false });
+                
+                var actualResult = TypeConverter.ConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
+
+                Assert.False(actualResult.IsSuccess);
+            }
+
+            public static IEnumerable<object[]> ValidUintTestData()
+            {
+                return new List<object[]>
+                {
+                    new object[] { "1", 1u },
+                    new object[] { uint.MaxValue.ToString(), uint.MaxValue }
+                };
+            }
+
+            public static IEnumerable<object[]> InvalidUintTestData()
+            {
+                return new List<object[]>
+                {
+                    new object[] { "-1" },
+                    new object[] { "1 invalid input" }
+                };
             }
         }
     }
