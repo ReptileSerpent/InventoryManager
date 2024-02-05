@@ -1,4 +1,5 @@
 ﻿using InventoryManager.Data.Entities;
+using InventoryManager.Data.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 
 namespace InventoryManager.Helpers
@@ -14,60 +15,97 @@ namespace InventoryManager.Helpers
                     convertedValue = input;
                     return new Result() { IsSuccess = true };
                 case Type _ when type == typeof(uint):
+                {
                     uint uintValue;
-                    if (!uint.TryParse(input, out uintValue))
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Invalid uint value: {input}" };
-
+                    var result = TryConvertToUint(input, out uintValue);
                     convertedValue = uintValue;
-                    return new Result() { IsSuccess = true };
+                    return result;
+                }
                 case Type _ when type == typeof(decimal):
+                {
                     decimal decimalValue;
-                    if (!decimal.TryParse(input, out decimalValue))
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Invalid decimal value: {input}" };
-
+                    var result = TryConvertToDecimal(input, out decimalValue);
                     convertedValue = decimalValue;
-                    return new Result() { IsSuccess = true };
+                    return result;
+                }
                 case Type _ when type == typeof(Product):
-                    var productReadResult = databaseController.TryReadEntityByCode<Product>(input, out Product product);
-                    if (!productReadResult.IsSuccess)
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Сode not found: {input}" };
-
+                {
+                    Product product;
+                    var result = TryConvertToEntityWithCodeByCode<Product>(input, databaseController, out product);
                     convertedValue = product;
-                    return new Result() { IsSuccess = true };
+                    return result;
+                }
                 case Type _ when type == typeof(Category):
-                    var categoryReadResult = databaseController.TryReadEntityByCode<Category>(input, out Category category);
-                    if (!categoryReadResult.IsSuccess)
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Сode not found: {input}" };
-
+                {
+                    Category category;
+                    var result = TryConvertToEntityWithCodeByCode<Category>(input, databaseController, out category);
                     convertedValue = category;
-                    return new Result() { IsSuccess = true };
+                    return result;
+                }
                 case Type _ when type == typeof(Warehouse):
-                    var warehouseReadResult = databaseController.TryReadEntityByCode<Warehouse>(input, out Warehouse warehouse);
-                    if (!warehouseReadResult.IsSuccess)
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Сode not found: {input}" };
-
+                {
+                    Warehouse warehouse;
+                    var result = TryConvertToEntityWithCodeByCode<Warehouse>(input, databaseController, out warehouse);
                     convertedValue = warehouse;
-                    return new Result() { IsSuccess = true };
+                    return result;
+                }
                 case Type _ when type == typeof(Location):
-                    var locationReadResult = databaseController.TryReadEntityByCode<Location>(input, out Location location);
-                    if (!locationReadResult.IsSuccess)
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Сode not found: {input}" };
-
+                {
+                    Location location;
+                    var result = TryConvertToEntityWithCodeByCode<Location>(input, databaseController, out location);
                     convertedValue = location;
-                    return new Result() { IsSuccess = true };
+                    return result;
+                }
                 case Type _ when type == typeof(InventoryEntry):
-                    uint inventoryId;
-                    if (!uint.TryParse(input, out inventoryId))
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Invalid uint value: {input}" };
-
-                    var inventoryEntryReadResult = databaseController.TryReadEntityById<InventoryEntry>(inventoryId, out InventoryEntry inventoryEntry);
-                    if (!inventoryEntryReadResult.IsSuccess)
-                        return new Result() { IsSuccess = false, ErrorDescription = $"Id not found: {inventoryId}" };
-
+                {
+                    InventoryEntry inventoryEntry;
+                    var result = TryConvertToEntityById<InventoryEntry>(input, databaseController, out inventoryEntry);
                     convertedValue = inventoryEntry;
-                    return new Result() { IsSuccess = true };
+                    return result;
+                }
             }
+
             return new Result() { IsSuccess = false, ErrorDescription = "Invalid input: " + input };
+        }
+
+        private static Result TryConvertToUint(string input, out uint convertedValue)
+        {
+            if (!uint.TryParse(input, out convertedValue))
+                return new Result() { IsSuccess = false, ErrorDescription = $"Invalid uint value: {input}" };
+
+            return new Result() { IsSuccess = true };
+        }
+
+        private static Result TryConvertToDecimal(string input, out decimal convertedValue)
+        {
+            if (!decimal.TryParse(input, out convertedValue))
+                return new Result() { IsSuccess = false, ErrorDescription = $"Invalid decimal value: {input}" };
+
+            return new Result() { IsSuccess = true };
+        }
+
+        private static Result TryConvertToEntityWithCodeByCode<T>(string input, IDatabaseController databaseController, out T convertedValue) where T : class, IEntityWithCode, new()
+        {
+            var productReadResult = databaseController.TryReadEntityByCode<T>(input, out convertedValue);
+            if (!productReadResult.IsSuccess)
+                return new Result() { IsSuccess = false, ErrorDescription = $"Сode not found: {input}" };
+
+            return new Result() { IsSuccess = true };
+        }
+
+        private static Result TryConvertToEntityById<T>(string input, IDatabaseController databaseController, out T convertedValue) where T : class, IEntity, new()
+        {
+            convertedValue = new T();
+            uint id;
+            var uintConversionResult = TryConvertToUint(input, out id);
+            if (!uintConversionResult.IsSuccess)
+                return uintConversionResult;
+
+            var inventoryEntryReadResult = databaseController.TryReadEntityById<T>(id, out convertedValue);
+            if (!inventoryEntryReadResult.IsSuccess)
+                return new Result() { IsSuccess = false, ErrorDescription = $"Id not found: {id}" };
+
+            return new Result() { IsSuccess = true };
         }
     }
 }
