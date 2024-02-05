@@ -18,7 +18,7 @@ namespace InventoryManager.Helpers.Tests
                 uint uintExpected = 1;
                 object expectedObject = uintExpected;
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
 
                 Assert.True(actualResult.IsSuccess);
                 Assert.Equal(expectedObject, actualObject);
@@ -32,7 +32,7 @@ namespace InventoryManager.Helpers.Tests
                 uint uintExpected = uint.MaxValue;
                 object expectedObject = uintExpected;
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
 
                 Assert.True(actualResult.IsSuccess);
                 Assert.Equal(expectedObject, actualObject);
@@ -44,7 +44,7 @@ namespace InventoryManager.Helpers.Tests
                 var mockDatabaseController = new Mock<IDatabaseController>();
                 var input = "-1";
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -55,7 +55,7 @@ namespace InventoryManager.Helpers.Tests
                 var mockDatabaseController = new Mock<IDatabaseController>();
                 var input = "1 invalid input";
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -71,7 +71,7 @@ namespace InventoryManager.Helpers.Tests
                 decimal decimalExpected = 1.01m;
                 object expectedObject = decimalExpected;
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(decimal), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(decimal), mockDatabaseController.Object, out object actualObject);
 
                 Assert.True(actualResult.IsSuccess);
                 Assert.Equal(expectedObject, actualObject);
@@ -83,7 +83,7 @@ namespace InventoryManager.Helpers.Tests
                 var mockDatabaseController = new Mock<IDatabaseController>();
                 var input = "1 invalid input";
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(decimal), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(decimal), mockDatabaseController.Object, out object actualObject);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -101,7 +101,7 @@ namespace InventoryManager.Helpers.Tests
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode<T>(input, out entity)).Returns(new Result() { IsSuccess = true });
                 var expectedType = typeof(T);
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(T), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(T), mockDatabaseController.Object, out object actualObject);
 
                 Assert.True(actualResult.IsSuccess);
                 Assert.IsType(expectedType, actualObject);
@@ -116,7 +116,7 @@ namespace InventoryManager.Helpers.Tests
                 var entity = value;
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode<T>(input, out entity)).Returns(new Result() { IsSuccess = false });
 
-                var actualResult = TypeConverter.ConvertStringToType(input, typeof(T), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(T), mockDatabaseController.Object, out object actualObject);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -144,7 +144,7 @@ namespace InventoryManager.Helpers.Tests
                 mockDatabaseController.Setup(x => x.TryReadEntityById<InventoryEntry>(uintInput, out entity)).Returns(new Result() { IsSuccess = true });
                 var expectedType = typeof(InventoryEntry);
 
-                var actualResult = TypeConverter.ConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
 
                 Assert.True(actualResult.IsSuccess);
                 Assert.IsType(expectedType, actualObject);
@@ -158,7 +158,7 @@ namespace InventoryManager.Helpers.Tests
                 var entity = new InventoryEntry();
                 mockDatabaseController.Setup(x => x.TryReadEntityById<InventoryEntry>(uintInput, out entity)).Returns(new Result() { IsSuccess = false });
                 
-                var actualResult = TypeConverter.ConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -173,7 +173,7 @@ namespace InventoryManager.Helpers.Tests
                 var uintInput = 1u;
                 mockDatabaseController.Setup(x => x.TryReadEntityById<InventoryEntry>(uintInput, out entity)).Returns(new Result() { IsSuccess = false });
                 
-                var actualResult = TypeConverter.ConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(stringInput, typeof(InventoryEntry), mockDatabaseController.Object, out object actualObject);
 
                 Assert.False(actualResult.IsSuccess);
             }

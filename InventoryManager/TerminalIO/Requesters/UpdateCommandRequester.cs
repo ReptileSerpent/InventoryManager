@@ -22,7 +22,7 @@ namespace InventoryManager.TerminalIO.Requesters
                 }
 
                 object convertedValue;
-                var conversionResult = TypeConverter.ConvertStringToType(input, typeof(uint), databaseController, out convertedValue);
+                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), databaseController, out convertedValue);
                 if (conversionResult.IsSuccess)
                 {
                     id = (uint)convertedValue;
@@ -87,7 +87,7 @@ namespace InventoryManager.TerminalIO.Requesters
                         continue;
                     }
                     object convertedValue;
-                    var result = TypeConverter.ConvertStringToType(input, property.PropertyType, databaseController, out convertedValue);
+                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, databaseController, out convertedValue);
                     if (result.IsSuccess)
                     {
                         property.SetValue(entity, convertedValue);
