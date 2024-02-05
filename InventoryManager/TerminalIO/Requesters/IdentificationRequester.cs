@@ -28,7 +28,7 @@ namespace InventoryManager.TerminalIO.Requesters
                     return new Result() { IsSuccess = false, ErrorDescription = "Unexpected end of input" };
 
                 object convertedValue;
-                var conversionResult = TypeConverter.ConvertStringToType(input, typeof(uint), databaseController, out convertedValue);
+                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), databaseController, out convertedValue);
                 if (conversionResult.IsSuccess)
                 {
                     inventoryEntryId = (uint)convertedValue;

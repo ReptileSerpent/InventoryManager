@@ -24,7 +24,7 @@ namespace InventoryManager.TerminalIO.Requesters
                         continue;
                     }
                     object convertedValue;
-                    var result = TypeConverter.ConvertStringToType(input, property.PropertyType, databaseController, out convertedValue);
+                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, databaseController, out convertedValue);
                     if (result.IsSuccess)
                     {
                         property.SetValue(entity, convertedValue);

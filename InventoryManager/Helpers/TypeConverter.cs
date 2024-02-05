@@ -6,7 +6,7 @@ namespace InventoryManager.Helpers
 {
     internal class TypeConverter
     {
-        internal static Result ConvertStringToType(string input, Type type, IDatabaseController databaseController, out object convertedValue)
+        internal static Result TryConvertStringToType(string input, Type type, IDatabaseController databaseController, out object convertedValue)
         {
             convertedValue = new object();
             switch (type)
