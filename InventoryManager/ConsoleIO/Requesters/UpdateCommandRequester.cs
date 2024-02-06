@@ -1,11 +1,12 @@
-﻿using InventoryManager.DatabaseAccess.Controllers;
+﻿using InventoryManager.ConsoleIO.Interfaces;
+using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 
-namespace InventoryManager.TerminalIO.Requesters
+namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class UpdateCommandRequester
     {
-        internal Result RequestEntityById<T>(DatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntity, new()
+        internal Result RequestEntityById<T>(IConsole console, DatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntity, new()
         {
             entity = new T();
             uint id;
@@ -13,8 +14,8 @@ namespace InventoryManager.TerminalIO.Requesters
             var shouldKeepAskingForId = true;
             while (shouldKeepAskingForId)
             {
-                Console.Write($"Id? ");
-                var input = Console.ReadLine();
+                console.Write($"Id? ");
+                var input = console.ReadLine();
                 if (input == null)
                 {
                     shouldKeepAskingForId = false;
@@ -30,7 +31,7 @@ namespace InventoryManager.TerminalIO.Requesters
                     if (!readResult.IsSuccess)
                         return readResult;
 
-                    var result = RequestPropertyValues<T>(databaseController, readEntity);
+                    var result = RequestPropertyValues<T>(console, databaseController, readEntity);
                     if (result.IsSuccess)
                     {
                         entity = readEntity;
@@ -40,26 +41,26 @@ namespace InventoryManager.TerminalIO.Requesters
                     return result;
                 }
                 else
-                    Console.WriteLine($"Error: {conversionResult.ErrorDescription}. Please try again.");
+                    console.WriteLine($"Error: {conversionResult.ErrorDescription}. Please try again.");
             }
 
             return new Result();
         }
 
-        internal Result RequestEntityByCode<T>(DatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntityWithCode, new()
+        internal Result RequestEntityByCode<T>(IConsole console, DatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntityWithCode, new()
         {
             entity = new T();
             T readEntity;
 
-            Console.Write($"Code? ");
-            var input = Console.ReadLine();
+            console.Write($"Code? ");
+            var input = console.ReadLine();
             if (input == null)
                 return new Result() { IsSuccess = false, ErrorDescription = "Unexpected end of input" };
             var readResult = databaseController.TryReadEntityByCode(input, out readEntity);
             if (!readResult.IsSuccess)
                 return readResult;
 
-            var result = RequestPropertyValues<T>(databaseController, readEntity);
+            var result = RequestPropertyValues<T>(console, databaseController, readEntity);
             if (result.IsSuccess)
             {
                 entity = readEntity;
@@ -69,7 +70,7 @@ namespace InventoryManager.TerminalIO.Requesters
             return result;
         }
 
-        internal Result RequestPropertyValues<T>(DatabaseController databaseController, T entity) where T : Data.Interfaces.IEntity, new()
+        internal Result RequestPropertyValues<T>(IConsole console, DatabaseController databaseController, T entity) where T : Data.Interfaces.IEntity, new()
         {
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
@@ -79,8 +80,8 @@ namespace InventoryManager.TerminalIO.Requesters
                 var shouldKeepAsking = true;
                 while (shouldKeepAsking)
                 {
-                    Console.Write($"{property.Name}? ");
-                    var input = Console.ReadLine();
+                    console.Write($"{property.Name}? ");
+                    var input = console.ReadLine();
                     if (input == null)
                     {
                         shouldKeepAsking = false;
@@ -94,7 +95,7 @@ namespace InventoryManager.TerminalIO.Requesters
                         shouldKeepAsking = false;
                     }
                     else
-                        Console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
+                        console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
                 }
             }
 

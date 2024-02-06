@@ -1,14 +1,15 @@
 ﻿using InventoryManager.Data.Entities;
 using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
-using InventoryManager.TerminalIO.Requesters;
+using InventoryManager.ConsoleIO.Requesters;
 using System.Text;
+using InventoryManager.ConsoleIO.Interfaces;
 
-namespace InventoryManager.TerminalIO.IOManagers
+namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class ReadMenuIOManager : MainMenuIOManager
     {
-        public ReadMenuIOManager(DatabaseController databaseController) : base(databaseController) { }
+        public ReadMenuIOManager(IConsole console, DatabaseController databaseController) : base(console, databaseController) { }
 
         public override string CommandsInfo => " === Read entity menu === \nEntities readable by code: product, category, warehouse, location\nEntities readable by id: inventory_entry\nCommands: exit";
 
@@ -21,48 +22,48 @@ namespace InventoryManager.TerminalIO.IOManagers
             {
                 case "product":
                     string productCode;
-                    requestResult = new IdentificationRequester().RequestCode<Product>(databaseController, out productCode);
+                    requestResult = new IdentificationRequester().RequestCode<Product>(console, databaseController, out productCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = databaseController.TryReadEntityByCode(productCode, out Product product);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(product));
+                        console.WriteLine(GenerateDisplayablePropertyValues(product));
                     break;
                 case "category":
                     string categoryCode;
-                    requestResult = new IdentificationRequester().RequestCode<Category>(databaseController, out categoryCode);
+                    requestResult = new IdentificationRequester().RequestCode<Category>(console, databaseController, out categoryCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = databaseController.TryReadEntityByCode(categoryCode, out Category category);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(category));
+                        console.WriteLine(GenerateDisplayablePropertyValues(category));
                     break;
                 case "warehouse":
                     string warehouseCode;
-                    requestResult = new IdentificationRequester().RequestCode<Product>(databaseController, out warehouseCode);
+                    requestResult = new IdentificationRequester().RequestCode<Product>(console, databaseController, out warehouseCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = databaseController.TryReadEntityByCode(warehouseCode, out Warehouse warehouse);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(warehouse));
+                        console.WriteLine(GenerateDisplayablePropertyValues(warehouse));
                     break;
                 case "location":
                     string locationCode;
-                    requestResult = new IdentificationRequester().RequestCode<Product>(databaseController, out locationCode);
+                    requestResult = new IdentificationRequester().RequestCode<Product>(console, databaseController, out locationCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = databaseController.TryReadEntityByCode(locationCode, out Location location);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(location));
+                        console.WriteLine(GenerateDisplayablePropertyValues(location));
                     break;
                 case "inventory_entry":
                     uint inventoryEntryId;
-                    requestResult = new IdentificationRequester().RequestId<Product>(databaseController, out inventoryEntryId);
+                    requestResult = new IdentificationRequester().RequestId<Product>(console, databaseController, out inventoryEntryId);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = databaseController.TryReadEntityById(inventoryEntryId, out InventoryEntry inventoryEntry);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(inventoryEntry));
+                        console.WriteLine(GenerateDisplayablePropertyValues(inventoryEntry));
                     break;
                 case "exit":
                     readResult = new Result()

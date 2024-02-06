@@ -1,11 +1,12 @@
-﻿using InventoryManager.DatabaseAccess.Controllers;
+﻿using InventoryManager.ConsoleIO.Interfaces;
+using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 
-namespace InventoryManager.TerminalIO.Requesters
+namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class CreateCommandRequester
     {
-        internal Result RequestPropertyValues<T>(DatabaseController databaseController, out T entity) where T : Data.Interfaces.IEntity, new()
+        internal Result RequestPropertyValues<T>(IConsole console, DatabaseController databaseController, out T entity) where T : Data.Interfaces.IEntity, new()
         {
             var properties = typeof(T).GetProperties();
             entity = new T();
@@ -16,8 +17,8 @@ namespace InventoryManager.TerminalIO.Requesters
                 var shouldKeepAsking = true;
                 while (shouldKeepAsking)
                 {
-                    Console.Write($"{property.Name}? ");
-                    var input = Console.ReadLine();
+                    console.Write($"{property.Name}? ");
+                    var input = console.ReadLine();
                     if (input == null)
                     {
                         shouldKeepAsking = false;
@@ -31,7 +32,7 @@ namespace InventoryManager.TerminalIO.Requesters
                         shouldKeepAsking = false;
                     }
                     else
-                        Console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
+                        console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
                 }
             }
 

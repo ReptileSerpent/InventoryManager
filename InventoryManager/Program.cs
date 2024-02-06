@@ -1,4 +1,6 @@
-﻿using InventoryManager.DatabaseAccess.Controllers;
+﻿using InventoryManager.ConsoleIO.Wrappers;
+using InventoryManager.DatabaseAccess.Controllers;
+using System;
 
 namespace InventoryManager
 {
@@ -7,8 +9,9 @@ namespace InventoryManager
         static void Main(string[] args)
         {
             var databaseController = new DatabaseController();
+            var console = new ConsoleWrapper();
 
-            var IOManager = new TerminalIO.IOManagers.MainMenuIOManager(databaseController);
+            var IOManager = new ConsoleIO.IOManagers.MainMenuIOManager(console, databaseController);
             IOManager.ExecuteIO();
         }
     }
