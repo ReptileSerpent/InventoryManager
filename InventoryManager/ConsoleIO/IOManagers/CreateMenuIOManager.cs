@@ -3,12 +3,13 @@ using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Requesters;
 using InventoryManager.ConsoleIO.Interfaces;
+using InventoryManager.DatabaseAccess.Interfaces;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class CreateMenuIOManager : MainMenuIOManager
     {
-        public CreateMenuIOManager(IConsole console, DatabaseController databaseController) : base(console, databaseController) { }
+        public CreateMenuIOManager(IConsole console, IDatabaseController databaseController) : base(console, databaseController) { }
 
         public override string CommandsInfo => " === Create entity menu === \nOptions: product, category, warehouse, location, inventory_entry\nCommands: exit";
 

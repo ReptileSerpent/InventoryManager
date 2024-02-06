@@ -3,12 +3,13 @@ using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Requesters;
 using InventoryManager.ConsoleIO.Interfaces;
+using InventoryManager.DatabaseAccess.Interfaces;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class DeleteMenuIOManager : MainMenuIOManager
     {
-        public DeleteMenuIOManager(IConsole console, DatabaseController databaseController) : base(console, databaseController) { }
+        public DeleteMenuIOManager(IConsole console, IDatabaseController databaseController) : base(console, databaseController) { }
 
         public override string CommandsInfo => " === Delete entity menu === \nEntities deletable by code: product, category, warehouse, location\nEntities deletable by id: inventory_entry\nCommands: exit";
 

@@ -1,12 +1,13 @@
 ﻿using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Controllers;
+using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
 
 namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class CreateCommandRequester
     {
-        internal Result RequestPropertyValues<T>(IConsole console, DatabaseController databaseController, out T entity) where T : Data.Interfaces.IEntity, new()
+        internal Result RequestPropertyValues<T>(IConsole console, IDatabaseController databaseController, out T entity) where T : Data.Interfaces.IEntity, new()
         {
             var properties = typeof(T).GetProperties();
             entity = new T();
