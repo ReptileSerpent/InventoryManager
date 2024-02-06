@@ -4,12 +4,13 @@ using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Requesters;
 using System.Text;
 using InventoryManager.ConsoleIO.Interfaces;
+using InventoryManager.DatabaseAccess.Interfaces;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class ReadMenuIOManager : MainMenuIOManager
     {
-        public ReadMenuIOManager(IConsole console, DatabaseController databaseController) : base(console, databaseController) { }
+        public ReadMenuIOManager(IConsole console, IDatabaseController databaseController) : base(console, databaseController) { }
 
         public override string CommandsInfo => " === Read entity menu === \nEntities readable by code: product, category, warehouse, location\nEntities readable by id: inventory_entry\nCommands: exit";
 

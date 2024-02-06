@@ -1,18 +1,19 @@
 ﻿using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Interfaces;
+using InventoryManager.DatabaseAccess.Interfaces;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class MainMenuIOManager : IIOManager
     {
-        public MainMenuIOManager(IConsole console, DatabaseController databaseController)
+        public MainMenuIOManager(IConsole console, IDatabaseController databaseController)
         {
             this.databaseController = databaseController;
             this.console = console;
         }
 
-        protected DatabaseController databaseController { get; }
+        protected IDatabaseController databaseController { get; }
         protected IConsole console { get; }
         public virtual string CommandsInfo => "Inventory Manager\nCommands: create, read, update, delete, exit";
 

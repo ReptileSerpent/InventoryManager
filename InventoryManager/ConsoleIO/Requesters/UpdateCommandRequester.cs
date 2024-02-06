@@ -1,12 +1,13 @@
 ﻿using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Controllers;
+using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
 
 namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class UpdateCommandRequester
     {
-        internal Result RequestEntityById<T>(IConsole console, DatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntity, new()
+        internal Result RequestEntityById<T>(IConsole console, IDatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntity, new()
         {
             entity = new T();
             uint id;
@@ -47,7 +48,7 @@ namespace InventoryManager.ConsoleIO.Requesters
             return new Result();
         }
 
-        internal Result RequestEntityByCode<T>(IConsole console, DatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntityWithCode, new()
+        internal Result RequestEntityByCode<T>(IConsole console, IDatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntityWithCode, new()
         {
             entity = new T();
             T readEntity;
@@ -70,7 +71,7 @@ namespace InventoryManager.ConsoleIO.Requesters
             return result;
         }
 
-        internal Result RequestPropertyValues<T>(IConsole console, DatabaseController databaseController, T entity) where T : Data.Interfaces.IEntity, new()
+        internal Result RequestPropertyValues<T>(IConsole console, IDatabaseController databaseController, T entity) where T : Data.Interfaces.IEntity, new()
         {
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)

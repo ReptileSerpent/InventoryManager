@@ -3,12 +3,13 @@ using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Requesters;
 using InventoryManager.ConsoleIO.Interfaces;
+using InventoryManager.DatabaseAccess.Interfaces;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class UpdateMenuIOManager : MainMenuIOManager
     {
-        public UpdateMenuIOManager(IConsole console, DatabaseController databaseController) : base(console, databaseController) { }
+        public UpdateMenuIOManager(IConsole console, IDatabaseController databaseController) : base(console, databaseController) { }
 
         public override string CommandsInfo => " === Update entity menu === \nEntities updatable by code: product, category, warehouse, location\nEntities updatable by id: inventory_entry\nCommands: exit";
 

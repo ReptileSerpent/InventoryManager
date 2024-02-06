@@ -1,12 +1,13 @@
 ﻿using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Controllers;
+using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
 
 namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class IdentificationRequester
     {
-        internal Result RequestCode<T>(IConsole console, DatabaseController databaseController, out string code)
+        internal Result RequestCode<T>(IConsole console, IDatabaseController databaseController, out string code)
         {
             code = "";
             console.Write($"Code? ");
@@ -17,7 +18,7 @@ namespace InventoryManager.ConsoleIO.Requesters
             return new Result() { IsSuccess = true };
         }
 
-        internal Result RequestId<T>(IConsole console, DatabaseController databaseController, out uint inventoryEntryId)
+        internal Result RequestId<T>(IConsole console, IDatabaseController databaseController, out uint inventoryEntryId)
         {
             inventoryEntryId = 0;
             var shouldKeepAskingForId = true;
