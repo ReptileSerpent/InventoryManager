@@ -1,9 +1,9 @@
 ﻿using InventoryManager.Data.Entities;
 using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
-using InventoryManager.TerminalIO.Requesters;
+using InventoryManager.ConsoleIO.Requesters;
 
-namespace InventoryManager.TerminalIO.IOManagers
+namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class UpdateMenuIOManager : MainMenuIOManager
     {

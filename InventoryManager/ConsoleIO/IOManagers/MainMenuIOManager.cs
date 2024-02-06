@@ -1,8 +1,8 @@
 ﻿using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
-using InventoryManager.TerminalIO.Interfaces;
+using InventoryManager.ConsoleIO.Interfaces;
 
-namespace InventoryManager.TerminalIO.IOManagers
+namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class MainMenuIOManager : IIOManager
     {

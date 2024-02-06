@@ -8,7 +8,7 @@ namespace InventoryManager
         {
             var databaseController = new DatabaseController();
 
-            var IOManager = new TerminalIO.IOManagers.MainMenuIOManager(databaseController);
+            var IOManager = new ConsoleIO.IOManagers.MainMenuIOManager(databaseController);
             IOManager.ExecuteIO();
         }
     }

@@ -1,6 +1,6 @@
 ﻿using InventoryManager.Helpers;
 
-namespace InventoryManager.TerminalIO.Interfaces
+namespace InventoryManager.ConsoleIO.Interfaces
 {
     internal interface IIOManager
     {

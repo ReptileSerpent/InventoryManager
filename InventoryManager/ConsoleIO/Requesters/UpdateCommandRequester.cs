@@ -1,7 +1,7 @@
 ﻿using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 
-namespace InventoryManager.TerminalIO.Requesters
+namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class UpdateCommandRequester
     {
