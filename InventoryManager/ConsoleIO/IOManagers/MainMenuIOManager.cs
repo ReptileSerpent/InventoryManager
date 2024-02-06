@@ -6,12 +6,14 @@ namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class MainMenuIOManager : IIOManager
     {
-        public MainMenuIOManager(DatabaseController databaseController)
+        public MainMenuIOManager(IConsole console, DatabaseController databaseController)
         {
             this.databaseController = databaseController;
+            this.console = console;
         }
 
         protected DatabaseController databaseController { get; }
+        protected IConsole console { get; }
         public virtual string CommandsInfo => "Inventory Manager\nCommands: create, read, update, delete, exit";
 
         public Result ExecuteIO()
@@ -19,10 +21,10 @@ namespace InventoryManager.ConsoleIO.IOManagers
             var shouldExit = false;
             while (!shouldExit)
             {
-                Console.WriteLine(CommandsInfo);
+                console.WriteLine(CommandsInfo);
 
-                Console.Write("> ");
-                var input = Console.ReadLine()?.Split(" ");
+                console.Write("> ");
+                var input = console.ReadLine()?.Split(" ");
                 if (input == null)
                 {
                     shouldExit = true;
@@ -30,9 +32,9 @@ namespace InventoryManager.ConsoleIO.IOManagers
                 }
                 var result = ProcessInput(input);
                 if (result.IsSuccess && !result.ReceivedExitCommand)
-                    Console.WriteLine("Success");
+                    console.WriteLine("Success");
                 if (!result.IsSuccess)
-                    Console.WriteLine("Error: " + result.ErrorDescription);
+                    console.WriteLine("Error: " + result.ErrorDescription);
                 if (result.ReceivedExitCommand)
                     shouldExit = true;
             }
@@ -45,16 +47,16 @@ namespace InventoryManager.ConsoleIO.IOManagers
             switch (lowercaseCommand)
             {
                 case "create":
-                    var createCommandIOManager = new CreateMenuIOManager(databaseController);
+                    var createCommandIOManager = new CreateMenuIOManager(console, databaseController);
                     return createCommandIOManager.ExecuteIO();
                 case "read":
-                    var readCommandIOManager = new ReadMenuIOManager(databaseController);
+                    var readCommandIOManager = new ReadMenuIOManager(console, databaseController);
                     return readCommandIOManager.ExecuteIO();
                 case "update":
-                    var updateCommandIOManager = new UpdateMenuIOManager(databaseController);
+                    var updateCommandIOManager = new UpdateMenuIOManager(console, databaseController);
                     return updateCommandIOManager.ExecuteIO();
                 case "delete":
-                    var deleteCommandIOManager = new DeleteMenuIOManager(databaseController);
+                    var deleteCommandIOManager = new DeleteMenuIOManager(console, databaseController);
                     return deleteCommandIOManager.ExecuteIO();
                 case "exit":
                     return new Result()
