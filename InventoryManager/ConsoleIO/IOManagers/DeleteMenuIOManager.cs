@@ -35,21 +35,21 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "warehouse":
                     string warehouseCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out warehouseCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Warehouse>(out warehouseCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     deletionResult = DatabaseController.TryDeleteEntityByCode<Warehouse>(warehouseCode);
                     break;
                 case "location":
                     string locationCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out locationCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Location>(out locationCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     deletionResult = DatabaseController.TryDeleteEntityByCode<Location>(locationCode);
                     break;
                 case "inventory_entry":
                     uint inventoryEntryId;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestId<Product>(out inventoryEntryId);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestId<InventoryEntry>(out inventoryEntryId);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     deletionResult = DatabaseController.TryDeleteEntityById<InventoryEntry>(inventoryEntryId);

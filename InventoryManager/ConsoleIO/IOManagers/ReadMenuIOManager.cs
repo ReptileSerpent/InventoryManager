@@ -40,7 +40,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "warehouse":
                     string warehouseCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out warehouseCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Warehouse>(out warehouseCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(warehouseCode, out Warehouse warehouse);
@@ -49,7 +49,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "location":
                     string locationCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out locationCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Location>(out locationCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(locationCode, out Location location);
@@ -58,7 +58,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "inventory_entry":
                     uint inventoryEntryId;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestId<Product>(out inventoryEntryId);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestId<InventoryEntry>(out inventoryEntryId);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityById(inventoryEntryId, out InventoryEntry inventoryEntry);
