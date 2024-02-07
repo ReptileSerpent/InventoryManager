@@ -1,6 +1,5 @@
 ﻿using InventoryManager.ConsoleIO.Wrappers;
 using InventoryManager.DatabaseAccess.Controllers;
-using System;
 
 namespace InventoryManager
 {

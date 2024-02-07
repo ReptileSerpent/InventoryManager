@@ -1,5 +1,4 @@
 ﻿using InventoryManager.Data.Entities;
-using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Requesters;
 using InventoryManager.ConsoleIO.Interfaces;
@@ -22,38 +21,38 @@ namespace InventoryManager.ConsoleIO.IOManagers
             {
                 case "product":
                     string productCode;
-                    requestResult = new IdentificationRequester().RequestCode<Product>(console, databaseController, out productCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out productCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
-                    deletionResult = databaseController.TryDeleteEntityByCode<Product>(productCode);
+                    deletionResult = DatabaseController.TryDeleteEntityByCode<Product>(productCode);
                     break;
                 case "category":
                     string categoryCode;
-                    requestResult = new IdentificationRequester().RequestCode<Category>(console, databaseController, out categoryCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Category>(out categoryCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
-                    deletionResult = databaseController.TryDeleteEntityByCode<Category>(categoryCode);
+                    deletionResult = DatabaseController.TryDeleteEntityByCode<Category>(categoryCode);
                     break;
                 case "warehouse":
                     string warehouseCode;
-                    requestResult = new IdentificationRequester().RequestCode<Product>(console, databaseController, out warehouseCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out warehouseCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
-                    deletionResult = databaseController.TryDeleteEntityByCode<Warehouse>(warehouseCode);
+                    deletionResult = DatabaseController.TryDeleteEntityByCode<Warehouse>(warehouseCode);
                     break;
                 case "location":
                     string locationCode;
-                    requestResult = new IdentificationRequester().RequestCode<Product>(console, databaseController, out locationCode);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out locationCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
-                    deletionResult = databaseController.TryDeleteEntityByCode<Location>(locationCode);
+                    deletionResult = DatabaseController.TryDeleteEntityByCode<Location>(locationCode);
                     break;
                 case "inventory_entry":
                     uint inventoryEntryId;
-                    requestResult = new IdentificationRequester().RequestId<Product>(console, databaseController, out inventoryEntryId);
+                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestId<Product>(out inventoryEntryId);
                     if (!requestResult.IsSuccess)
                         return requestResult;
-                    deletionResult = databaseController.TryDeleteEntityById<InventoryEntry>(inventoryEntryId);
+                    deletionResult = DatabaseController.TryDeleteEntityById<InventoryEntry>(inventoryEntryId);
                     break;
                 case "exit":
                     deletionResult = new Result()

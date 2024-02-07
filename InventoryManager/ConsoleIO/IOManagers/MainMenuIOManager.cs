@@ -1,5 +1,4 @@
-﻿using InventoryManager.DatabaseAccess.Controllers;
-using InventoryManager.Helpers;
+﻿using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 
@@ -9,12 +8,13 @@ namespace InventoryManager.ConsoleIO.IOManagers
     {
         public MainMenuIOManager(IConsole console, IDatabaseController databaseController)
         {
-            this.databaseController = databaseController;
-            this.console = console;
+            Console = console;
+            DatabaseController = databaseController;
         }
 
-        protected IDatabaseController databaseController { get; }
-        protected IConsole console { get; }
+        protected IConsole Console { get; }
+        protected IDatabaseController DatabaseController { get; }
+
         public virtual string CommandsInfo => "Inventory Manager\nCommands: create, read, update, delete, exit";
 
         public Result ExecuteIO()
@@ -22,10 +22,10 @@ namespace InventoryManager.ConsoleIO.IOManagers
             var shouldExit = false;
             while (!shouldExit)
             {
-                console.WriteLine(CommandsInfo);
+                Console.WriteLine(CommandsInfo);
 
-                console.Write("> ");
-                var input = console.ReadLine()?.Split(" ");
+                Console.Write("> ");
+                var input = Console.ReadLine()?.Split(" ");
                 if (input == null)
                 {
                     shouldExit = true;
@@ -33,9 +33,9 @@ namespace InventoryManager.ConsoleIO.IOManagers
                 }
                 var result = ProcessInput(input);
                 if (result.IsSuccess && !result.ReceivedExitCommand)
-                    console.WriteLine("Success");
+                    Console.WriteLine("Success");
                 if (!result.IsSuccess)
-                    console.WriteLine("Error: " + result.ErrorDescription);
+                    Console.WriteLine("Error: " + result.ErrorDescription);
                 if (result.ReceivedExitCommand)
                     shouldExit = true;
             }
@@ -48,16 +48,16 @@ namespace InventoryManager.ConsoleIO.IOManagers
             switch (lowercaseCommand)
             {
                 case "create":
-                    var createCommandIOManager = new CreateMenuIOManager(console, databaseController);
+                    var createCommandIOManager = new CreateMenuIOManager(Console, DatabaseController);
                     return createCommandIOManager.ExecuteIO();
                 case "read":
-                    var readCommandIOManager = new ReadMenuIOManager(console, databaseController);
+                    var readCommandIOManager = new ReadMenuIOManager(Console, DatabaseController);
                     return readCommandIOManager.ExecuteIO();
                 case "update":
-                    var updateCommandIOManager = new UpdateMenuIOManager(console, databaseController);
+                    var updateCommandIOManager = new UpdateMenuIOManager(Console, DatabaseController);
                     return updateCommandIOManager.ExecuteIO();
                 case "delete":
-                    var deleteCommandIOManager = new DeleteMenuIOManager(console, databaseController);
+                    var deleteCommandIOManager = new DeleteMenuIOManager(Console, DatabaseController);
                     return deleteCommandIOManager.ExecuteIO();
                 case "exit":
                     return new Result()
