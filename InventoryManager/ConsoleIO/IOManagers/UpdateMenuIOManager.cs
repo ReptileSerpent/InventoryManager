@@ -21,24 +21,24 @@ namespace InventoryManager.ConsoleIO.IOManagers
             {
                 case "product":
                     Product product;
-                    result = new UpdateCommandRequester().RequestEntityByCode<Product>(console, databaseController, out product);
-                    return result.IsSuccess ? databaseController.TryUpdateEntity(product) : result;
+                    result = new UpdateCommandRequester(Console, DatabaseController).RequestEntityByCode<Product>(out product);
+                    return result.IsSuccess ? DatabaseController.TryUpdateEntity(product) : result;
                 case "category":
                     Category category;
-                    result = new UpdateCommandRequester().RequestEntityByCode<Category>(console, databaseController, out category);
-                    return result.IsSuccess ? databaseController.TryUpdateEntity(category) : result;
+                    result = new UpdateCommandRequester(Console, DatabaseController).RequestEntityByCode<Category>(out category);
+                    return result.IsSuccess ? DatabaseController.TryUpdateEntity(category) : result;
                 case "warehouse":
                     Warehouse warehouse;
-                    result = new UpdateCommandRequester().RequestEntityByCode<Warehouse>(console, databaseController, out warehouse);
-                    return result.IsSuccess ? databaseController.TryUpdateEntity(warehouse) : result;
+                    result = new UpdateCommandRequester(Console, DatabaseController).RequestEntityByCode<Warehouse>(out warehouse);
+                    return result.IsSuccess ? DatabaseController.TryUpdateEntity(warehouse) : result;
                 case "location":
                     Location location;
-                    result = new UpdateCommandRequester().RequestEntityByCode<Location>(console, databaseController, out location);
-                    return result.IsSuccess ? databaseController.TryUpdateEntity(location) : result;
+                    result = new UpdateCommandRequester(Console, DatabaseController).RequestEntityByCode<Location>(out location);
+                    return result.IsSuccess ? DatabaseController.TryUpdateEntity(location) : result;
                 case "inventory_entry":
                     InventoryEntry inventoryEntry;
-                    result = new UpdateCommandRequester().RequestEntityById<InventoryEntry>(console, databaseController, out inventoryEntry);
-                    return result.IsSuccess ? databaseController.TryUpdateEntity(inventoryEntry) : result;
+                    result = new UpdateCommandRequester(Console, DatabaseController).RequestEntityById<InventoryEntry>(out inventoryEntry);
+                    return result.IsSuccess ? DatabaseController.TryUpdateEntity(inventoryEntry) : result;
                 case "exit":
                     result = new Result()
                     {

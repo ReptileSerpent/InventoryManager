@@ -7,7 +7,16 @@ namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class UpdateCommandRequester
     {
-        internal Result RequestEntityById<T>(IConsole console, IDatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntity, new()
+        public UpdateCommandRequester(IConsole console, IDatabaseController databaseController)
+        {
+            Console = console;
+            DatabaseController = databaseController;
+        }
+
+        private IConsole Console { get; }
+        private IDatabaseController DatabaseController { get; }
+
+        internal Result RequestEntityById<T>(out T entity) where T : class, Data.Interfaces.IEntity, new()
         {
             entity = new T();
             uint id;
@@ -15,8 +24,8 @@ namespace InventoryManager.ConsoleIO.Requesters
             var shouldKeepAskingForId = true;
             while (shouldKeepAskingForId)
             {
-                console.Write($"Id? ");
-                var input = console.ReadLine();
+                Console.Write($"Id? ");
+                var input = Console.ReadLine();
                 if (input == null)
                 {
                     shouldKeepAskingForId = false;
@@ -24,15 +33,15 @@ namespace InventoryManager.ConsoleIO.Requesters
                 }
 
                 object convertedValue;
-                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), databaseController, out convertedValue);
+                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), DatabaseController, out convertedValue);
                 if (conversionResult.IsSuccess)
                 {
                     id = (uint)convertedValue;
-                    var readResult = databaseController.TryReadEntityById(id, out readEntity);
+                    var readResult = DatabaseController.TryReadEntityById(id, out readEntity);
                     if (!readResult.IsSuccess)
                         return readResult;
 
-                    var result = RequestPropertyValues<T>(console, databaseController, readEntity);
+                    var result = RequestPropertyValues<T>(readEntity);
                     if (result.IsSuccess)
                     {
                         entity = readEntity;
@@ -42,26 +51,26 @@ namespace InventoryManager.ConsoleIO.Requesters
                     return result;
                 }
                 else
-                    console.WriteLine($"Error: {conversionResult.ErrorDescription}. Please try again.");
+                    Console.WriteLine($"Error: {conversionResult.ErrorDescription}. Please try again.");
             }
 
             return new Result();
         }
 
-        internal Result RequestEntityByCode<T>(IConsole console, IDatabaseController databaseController, out T entity) where T : class, Data.Interfaces.IEntityWithCode, new()
+        internal Result RequestEntityByCode<T>(out T entity) where T : class, Data.Interfaces.IEntityWithCode, new()
         {
             entity = new T();
             T readEntity;
 
-            console.Write($"Code? ");
-            var input = console.ReadLine();
+            Console.Write($"Code? ");
+            var input = Console.ReadLine();
             if (input == null)
                 return new Result() { IsSuccess = false, ErrorDescription = "Unexpected end of input" };
-            var readResult = databaseController.TryReadEntityByCode(input, out readEntity);
+            var readResult = DatabaseController.TryReadEntityByCode(input, out readEntity);
             if (!readResult.IsSuccess)
                 return readResult;
 
-            var result = RequestPropertyValues<T>(console, databaseController, readEntity);
+            var result = RequestPropertyValues<T>(readEntity);
             if (result.IsSuccess)
             {
                 entity = readEntity;
@@ -71,7 +80,7 @@ namespace InventoryManager.ConsoleIO.Requesters
             return result;
         }
 
-        internal Result RequestPropertyValues<T>(IConsole console, IDatabaseController databaseController, T entity) where T : Data.Interfaces.IEntity, new()
+        internal Result RequestPropertyValues<T>(T entity) where T : Data.Interfaces.IEntity, new()
         {
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
@@ -81,22 +90,22 @@ namespace InventoryManager.ConsoleIO.Requesters
                 var shouldKeepAsking = true;
                 while (shouldKeepAsking)
                 {
-                    console.Write($"{property.Name}? ");
-                    var input = console.ReadLine();
+                    Console.Write($"{property.Name}? ");
+                    var input = Console.ReadLine();
                     if (input == null)
                     {
                         shouldKeepAsking = false;
                         continue;
                     }
                     object convertedValue;
-                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, databaseController, out convertedValue);
+                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out convertedValue);
                     if (result.IsSuccess)
                     {
                         property.SetValue(entity, convertedValue);
                         shouldKeepAsking = false;
                     }
                     else
-                        console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
+                        Console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
                 }
             }
 

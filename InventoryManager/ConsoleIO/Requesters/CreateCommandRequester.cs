@@ -7,7 +7,16 @@ namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class CreateCommandRequester
     {
-        internal Result RequestPropertyValues<T>(IConsole console, IDatabaseController databaseController, out T entity) where T : Data.Interfaces.IEntity, new()
+        public CreateCommandRequester(IConsole console, IDatabaseController databaseController)
+        {
+            Console = console;
+            DatabaseController = databaseController;
+        }
+
+        private IDatabaseController DatabaseController { get; }
+        private IConsole Console { get; }
+
+        internal Result RequestPropertyValues<T>(out T entity) where T : Data.Interfaces.IEntity, new()
         {
             var properties = typeof(T).GetProperties();
             entity = new T();
@@ -18,22 +27,22 @@ namespace InventoryManager.ConsoleIO.Requesters
                 var shouldKeepAsking = true;
                 while (shouldKeepAsking)
                 {
-                    console.Write($"{property.Name}? ");
-                    var input = console.ReadLine();
+                    Console.Write($"{property.Name}? ");
+                    var input = Console.ReadLine();
                     if (input == null)
                     {
                         shouldKeepAsking = false;
                         continue;
                     }
                     object convertedValue;
-                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, databaseController, out convertedValue);
+                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out convertedValue);
                     if (result.IsSuccess)
                     {
                         property.SetValue(entity, convertedValue);
                         shouldKeepAsking = false;
                     }
                     else
-                        console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
+                        Console.WriteLine($"Error: {result.ErrorDescription}. Please try again.");
                 }
             }
 

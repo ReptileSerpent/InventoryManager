@@ -7,37 +7,46 @@ namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class IdentificationRequester
     {
-        internal Result RequestCode<T>(IConsole console, IDatabaseController databaseController, out string code)
+        public IdentificationRequester(IConsole console, IDatabaseController databaseController)
+        {
+            Console = console;
+            DatabaseController = databaseController;
+        }
+
+        private IDatabaseController DatabaseController { get; }
+        private IConsole Console { get; }
+
+        internal Result RequestCode<T>(out string code)
         {
             code = "";
-            console.Write($"Code? ");
-            var input = console.ReadLine();
+            Console.Write($"Code? ");
+            var input = Console.ReadLine();
             if (input == null)
                 return new Result() { IsSuccess = false, ErrorDescription = "Unexpected end of input" };
             code = input;
             return new Result() { IsSuccess = true };
         }
 
-        internal Result RequestId<T>(IConsole console, IDatabaseController databaseController, out uint inventoryEntryId)
+        internal Result RequestId<T>(out uint inventoryEntryId)
         {
             inventoryEntryId = 0;
             var shouldKeepAskingForId = true;
             while (shouldKeepAskingForId)
             {
-                console.Write($"Id? ");
-                var input = console.ReadLine();
+                Console.Write($"Id? ");
+                var input = Console.ReadLine();
                 if (input == null)
                     return new Result() { IsSuccess = false, ErrorDescription = "Unexpected end of input" };
 
                 object convertedValue;
-                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), databaseController, out convertedValue);
+                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), DatabaseController, out convertedValue);
                 if (conversionResult.IsSuccess)
                 {
                     inventoryEntryId = (uint)convertedValue;
                     return new Result() { IsSuccess = true };
                 }
 
-                console.WriteLine($"Error: {conversionResult.ErrorDescription}. Please try again.");
+                Console.WriteLine($"Error: {conversionResult.ErrorDescription}. Please try again.");
             }
 
             return new Result();
