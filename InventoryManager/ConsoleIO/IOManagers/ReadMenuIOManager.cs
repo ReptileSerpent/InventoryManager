@@ -1,5 +1,4 @@
 ﻿using InventoryManager.Data.Entities;
-using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Requesters;
 using System.Text;

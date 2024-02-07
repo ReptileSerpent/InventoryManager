@@ -1,5 +1,4 @@
 ﻿using InventoryManager.ConsoleIO.Interfaces;
-using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
 

@@ -1,5 +1,4 @@
 ﻿using InventoryManager.Data.Entities;
-using InventoryManager.Data.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 using Moq;
 using Xunit;
