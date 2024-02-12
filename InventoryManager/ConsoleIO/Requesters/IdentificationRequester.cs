@@ -26,11 +26,11 @@ namespace InventoryManager.ConsoleIO.Requesters
             return new Result() { IsSuccess = true };
         }
 
-        internal Result RequestId<T>(out uint inventoryEntryId)
+        internal Result RequestId<T>(out uint id)
         {
-            inventoryEntryId = 0;
-            var shouldKeepAskingForId = true;
-            while (shouldKeepAskingForId)
+            id = 0;
+            var shouldKeepAsking = true;
+            while (shouldKeepAsking)
             {
                 Console.Write($"Id? ");
                 var input = Console.ReadLine();
@@ -41,7 +41,7 @@ namespace InventoryManager.ConsoleIO.Requesters
                 var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), DatabaseController, out convertedValue);
                 if (conversionResult.IsSuccess)
                 {
-                    inventoryEntryId = (uint)convertedValue;
+                    id = (uint)convertedValue;
                     return new Result() { IsSuccess = true };
                 }
 
