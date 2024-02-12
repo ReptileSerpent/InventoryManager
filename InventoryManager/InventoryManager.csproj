@@ -28,6 +28,9 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Helpers.Tests</_Parameter1>
     </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ConsoleIO.Tests.Requesters</_Parameter1>
+    </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
         <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
     </AssemblyAttribute>
@@ -35,7 +38,6 @@
 
   <ItemGroup>
     <Folder Include="Data.Tests\" />
-    <Folder Include="ConsoleIO.Tests\" />
   </ItemGroup>
 
 </Project>
