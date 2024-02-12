@@ -86,8 +86,8 @@ namespace InventoryManager.Helpers
 
         private static Result TryConvertToEntityWithCodeByCode<T>(string input, IDatabaseController databaseController, out T convertedValue) where T : class, IEntityWithCode, new()
         {
-            var productReadResult = databaseController.TryReadEntityByCode<T>(input, out convertedValue);
-            if (!productReadResult.IsSuccess)
+            var readResult = databaseController.TryReadEntityByCode<T>(input, out convertedValue);
+            if (!readResult.IsSuccess)
                 return new Result() { IsSuccess = false, ErrorDescription = $"Сode not found: {input}" };
 
             return new Result() { IsSuccess = true };
