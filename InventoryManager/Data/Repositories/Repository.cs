@@ -53,13 +53,5 @@
             }
             return searchResult;
         }
-
-        /// <returns>The entity if one with the given id exists; otherwise, null.</returns>
-        public T? FindById(uint id)
-        {
-            var dataSet = dbContext.Set<T>();
-            // Supposedly Find is faster than SingleOrDefault
-            return dataSet.Find(typeof(T), id);
-        }
     }
 }
