@@ -6,6 +6,10 @@ namespace InventoryManager.Helpers
 {
     internal class TypeConverter
     {
+        /// <summary>
+        /// Converts the input to the specified type. Accepted types: string, uint, decimal, Product, Category, Warehouse, Location, InventoryEntry.
+        /// </summary>
+        // Method cannot be made generic due to the need to convert to arbitrary types in Requester classes
         internal static Result TryConvertStringToType(string input, Type type, IDatabaseController databaseController, out object convertedValue)
         {
             convertedValue = new object();
