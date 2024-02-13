@@ -5,13 +5,6 @@
         public EntityWithCodeRepository(InventoryContext dbContext) : base(dbContext) { }
 
         /// <returns>The entity if one with the given code exists; otherwise, null.</returns>
-        public T? FindByCode(string code)
-        {
-            var dataSet = dbContext.Set<T>();
-            return dataSet.FirstOrDefault(row => row.Code == code);
-        }
-
-        /// <returns>The entity if one with the given code exists; otherwise, null.</returns>
         public T? ReadByCode(string code)
         {
             T? searchResult = null;
