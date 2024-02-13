@@ -20,6 +20,7 @@
             return entity;
         }
 
+        /// <returns>The entity if one with the given id exists; otherwise, null.</returns>
         public T? ReadById(uint id)
         {
             T? searchResult = null;
@@ -39,6 +40,7 @@
             return entity;
         }
 
+        /// <returns>The entity if one with the given id exists prior to deletion; otherwise, null.</returns>
         public T? DeleteById(uint id)
         {
             T? searchResult = null;
@@ -52,6 +54,7 @@
             return searchResult;
         }
 
+        /// <returns>The entity if one with the given id exists; otherwise, null.</returns>
         public T? FindById(uint id)
         {
             var dataSet = dbContext.Set<T>();

@@ -15,6 +15,9 @@ namespace InventoryManager.ConsoleIO.Requesters
         private IDatabaseController DatabaseController { get; }
         private IConsole Console { get; }
 
+        /// <summary>
+        /// Requests property values from Console, except for Id.
+        /// </summary>
         internal Result RequestPropertyValues<T>(out T entity) where T : Data.Interfaces.IEntity, new()
         {
             var properties = typeof(T).GetProperties();
