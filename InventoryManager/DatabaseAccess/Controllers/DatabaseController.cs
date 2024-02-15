@@ -7,22 +7,22 @@ namespace InventoryManager.DatabaseAccess.Controllers
 {
     internal class DatabaseController : IDatabaseController
     {
-        public DatabaseController(ILogger logger)
+        public DatabaseController(ILogger logger, InventoryContext dbContext)
         {
             Logger = logger;
-            dbContext = new InventoryContext();
+            DbContext = dbContext;
         }
 
         private ILogger Logger { get; }
-        private InventoryContext dbContext;
+        private InventoryContext DbContext { get; set; }
 
         public Result TryCreateEntity<T>(T entity) where T : class, Data.Interfaces.IEntity
         {
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
+                var repository = new Data.Repositories.Repository<T>(DbContext);
                 var createdEntity = repository.Create(entity);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
@@ -42,7 +42,7 @@ namespace InventoryManager.DatabaseAccess.Controllers
 
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
+                var repository = new Data.Repositories.Repository<T>(DbContext);
                 var readEntity = repository.ReadById(id);
                 if (readEntity == null)
                     throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
@@ -66,7 +66,7 @@ namespace InventoryManager.DatabaseAccess.Controllers
 
             try
             {
-                var repository = new Data.Repositories.EntityWithCodeRepository<T>(dbContext);
+                var repository = new Data.Repositories.EntityWithCodeRepository<T>(DbContext);
                 var readEntity = repository.ReadByCode(code);
                 if (readEntity == null)
                     throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
@@ -88,9 +88,9 @@ namespace InventoryManager.DatabaseAccess.Controllers
         {
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
+                var repository = new Data.Repositories.Repository<T>(DbContext);
                 var updatedEntity = repository.Update(entity);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
@@ -108,9 +108,9 @@ namespace InventoryManager.DatabaseAccess.Controllers
         {
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
+                var repository = new Data.Repositories.Repository<T>(DbContext);
                 repository.DeleteById(id);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
@@ -128,9 +128,9 @@ namespace InventoryManager.DatabaseAccess.Controllers
         {
             try
             {
-                var repository = new Data.Repositories.EntityWithCodeRepository<T>(dbContext);
+                var repository = new Data.Repositories.EntityWithCodeRepository<T>(DbContext);
                 repository.DeleteByCode(code);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)

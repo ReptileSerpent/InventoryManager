@@ -1,4 +1,5 @@
 ﻿using InventoryManager.ConsoleIO.Wrappers;
+using InventoryManager.Data;
 using InventoryManager.DatabaseAccess.Controllers;
 using InventoryManager.Helpers;
 using Microsoft.Extensions.Logging;
@@ -14,7 +15,7 @@ namespace InventoryManager
             try
             {
                 logger.LogInformation("InventoryManager started");
-                var databaseController = new DatabaseController(logger);
+                var databaseController = new DatabaseController(logger, new InventoryContext());
                 var console = new ConsoleWrapper();
 
                 var IOManager = new ConsoleIO.IOManagers.MainMenuIOManager(logger, console, databaseController);
