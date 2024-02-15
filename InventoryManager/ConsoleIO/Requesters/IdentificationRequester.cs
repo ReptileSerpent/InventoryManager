@@ -40,8 +40,7 @@ namespace InventoryManager.ConsoleIO.Requesters
                 if (input == null)
                     return new Result() { IsSuccess = false, ErrorDescription = "Unexpected end of input" };
 
-                object convertedValue;
-                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), DatabaseController, out convertedValue);
+                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), DatabaseController, out object convertedValue);
                 if (conversionResult.IsSuccess)
                 {
                     id = (uint)convertedValue;

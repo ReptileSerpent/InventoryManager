@@ -25,7 +25,6 @@ namespace InventoryManager.ConsoleIO.Requesters
         {
             entity = new T();
             uint id;
-            T readEntity;
             var shouldKeepAskingForId = true;
             while (shouldKeepAskingForId)
             {
@@ -37,12 +36,11 @@ namespace InventoryManager.ConsoleIO.Requesters
                     continue;
                 }
 
-                object convertedValue;
-                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), DatabaseController, out convertedValue);
+                var conversionResult = TypeConverter.TryConvertStringToType(input, typeof(uint), DatabaseController, out object convertedValue);
                 if (conversionResult.IsSuccess)
                 {
                     id = (uint)convertedValue;
-                    var readResult = DatabaseController.TryReadEntityById(id, out readEntity);
+                    var readResult = DatabaseController.TryReadEntityById(id, out T readEntity);
                     if (!readResult.IsSuccess)
                         return readResult;
 
@@ -68,13 +66,12 @@ namespace InventoryManager.ConsoleIO.Requesters
         internal Result RequestEntityByCode<T>(out T entity) where T : class, Data.Interfaces.IEntityWithCode, new()
         {
             entity = new T();
-            T readEntity;
 
             Console.Write($"Code? ");
             var input = Console.ReadLine();
             if (input == null)
                 return new Result() { IsSuccess = false, ErrorDescription = "Unexpected end of input" };
-            var readResult = DatabaseController.TryReadEntityByCode(input, out readEntity);
+            var readResult = DatabaseController.TryReadEntityByCode(input, out T readEntity);
             if (!readResult.IsSuccess)
                 return readResult;
 
@@ -108,8 +105,7 @@ namespace InventoryManager.ConsoleIO.Requesters
                         shouldKeepAsking = false;
                         continue;
                     }
-                    object convertedValue;
-                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out convertedValue);
+                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out object convertedValue);
                     if (result.IsSuccess)
                     {
                         property.SetValue(entity, convertedValue);

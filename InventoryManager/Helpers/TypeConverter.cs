@@ -20,50 +20,43 @@ namespace InventoryManager.Helpers
                     return new Result() { IsSuccess = true };
                 case Type _ when type == typeof(uint):
                 {
-                    uint uintValue;
-                    var result = TryConvertToUint(input, out uintValue);
+                    var result = TryConvertToUint(input, out uint uintValue);
                     convertedValue = uintValue;
                     return result;
                 }
                 case Type _ when type == typeof(decimal):
                 {
-                    decimal decimalValue;
-                    var result = TryConvertToDecimal(input, out decimalValue);
+                    var result = TryConvertToDecimal(input, out decimal decimalValue);
                     convertedValue = decimalValue;
                     return result;
                 }
                 case Type _ when type == typeof(Product):
                 {
-                    Product product;
-                    var result = TryConvertToEntityWithCodeByCode<Product>(input, databaseController, out product);
+                    var result = TryConvertToEntityWithCodeByCode(input, databaseController, out Product product);
                     convertedValue = product;
                     return result;
                 }
                 case Type _ when type == typeof(Category):
                 {
-                    Category category;
-                    var result = TryConvertToEntityWithCodeByCode<Category>(input, databaseController, out category);
+                    var result = TryConvertToEntityWithCodeByCode(input, databaseController, out Category category);
                     convertedValue = category;
                     return result;
                 }
                 case Type _ when type == typeof(Warehouse):
                 {
-                    Warehouse warehouse;
-                    var result = TryConvertToEntityWithCodeByCode<Warehouse>(input, databaseController, out warehouse);
+                    var result = TryConvertToEntityWithCodeByCode(input, databaseController, out Warehouse warehouse);
                     convertedValue = warehouse;
                     return result;
                 }
                 case Type _ when type == typeof(Location):
                 {
-                    Location location;
-                    var result = TryConvertToEntityWithCodeByCode<Location>(input, databaseController, out location);
+                    var result = TryConvertToEntityWithCodeByCode(input, databaseController, out Location location);
                     convertedValue = location;
                     return result;
                 }
                 case Type _ when type == typeof(InventoryEntry):
                 {
-                    InventoryEntry inventoryEntry;
-                    var result = TryConvertToEntityById<InventoryEntry>(input, databaseController, out inventoryEntry);
+                    var result = TryConvertToEntityById(input, databaseController, out InventoryEntry inventoryEntry);
                     convertedValue = inventoryEntry;
                     return result;
                 }
@@ -100,8 +93,7 @@ namespace InventoryManager.Helpers
         private static Result TryConvertToEntityById<T>(string input, IDatabaseController databaseController, out T convertedValue) where T : class, IEntity, new()
         {
             convertedValue = new T();
-            uint id;
-            var uintConversionResult = TryConvertToUint(input, out id);
+            var uintConversionResult = TryConvertToUint(input, out uint id);
             if (!uintConversionResult.IsSuccess)
                 return uintConversionResult;
 

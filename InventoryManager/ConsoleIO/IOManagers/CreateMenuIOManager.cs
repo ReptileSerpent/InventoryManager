@@ -21,23 +21,23 @@ namespace InventoryManager.ConsoleIO.IOManagers
             {
                 case "product":
                     Product product;
-                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues<Product>(out product);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out product);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(product) : result;
                 case "category":
                     Category category;
-                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues<Category>(out category);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out category);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(category) : result;
                 case "warehouse":
                     Warehouse warehouse;
-                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues<Warehouse>(out warehouse);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out warehouse);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(warehouse) : result;
                 case "location":
                     Location location;
-                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues<Location>(out location);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out location);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(location) : result;
                 case "inventory_entry":
                     InventoryEntry inventoryEntry;
-                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues<InventoryEntry>(out inventoryEntry);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out inventoryEntry);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(inventoryEntry) : result;
                 case "exit":
                     result = new Result()

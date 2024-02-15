@@ -40,8 +40,7 @@ namespace InventoryManager.ConsoleIO.Requesters
                         shouldKeepAsking = false;
                         continue;
                     }
-                    object convertedValue;
-                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out convertedValue);
+                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out object convertedValue);
                     if (result.IsSuccess)
                     {
                         property.SetValue(entity, convertedValue);

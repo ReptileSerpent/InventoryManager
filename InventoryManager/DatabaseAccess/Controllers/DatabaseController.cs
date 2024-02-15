@@ -27,7 +27,7 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Failed to create entity of type {0}", typeof(T).Name);
+                Logger.LogError(e, "Failed to create entity of type {EntityType}", typeof(T).Name);
                 return new Result()
                 {
                     IsSuccess = false,
@@ -43,15 +43,13 @@ namespace InventoryManager.DatabaseAccess.Controllers
             try
             {
                 var repository = new Data.Repositories.Repository<T>(DbContext);
-                var readEntity = repository.ReadById(id);
-                if (readEntity == null)
-                    throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
+                var readEntity = repository.ReadById(id) ?? throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
                 entity = readEntity;
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Failed to read entity of type {0} by id {1}", typeof(T).Name, id);
+                Logger.LogError(e, "Failed to read entity of type {EntityType} by id {Id}", typeof(T).Name, id);
                 return new Result()
                 {
                     IsSuccess = false,
@@ -67,15 +65,13 @@ namespace InventoryManager.DatabaseAccess.Controllers
             try
             {
                 var repository = new Data.Repositories.EntityWithCodeRepository<T>(DbContext);
-                var readEntity = repository.ReadByCode(code);
-                if (readEntity == null)
-                    throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
+                var readEntity = repository.ReadByCode(code) ?? throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
                 entity = readEntity;
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Failed to create entity of type {0} by code {1}", typeof(T).Name, code);
+                Logger.LogError(e, "Failed to create entity of type {EntityType} by code {Code}", typeof(T).Name, code);
                 return new Result()
                 {
                     IsSuccess = false,
@@ -95,7 +91,7 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, $"Failed to update entity of type {0}", typeof(T).Name);
+                Logger.LogError(e, "Failed to update entity of type {EntityType}", typeof(T).Name);
                 return new Result()
                 {
                     IsSuccess = false,
@@ -115,7 +111,7 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, $"Failed to delete entity of type {0} by id {1}", typeof(T).Name, id);
+                Logger.LogError(e, "Failed to delete entity of type {EntityType} by id {Id}", typeof(T).Name, id);
                 return new Result()
                 {
                     IsSuccess = false,
@@ -135,7 +131,7 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
-                Logger.LogError(e, $"Failed to delete entity of type {0} by code {1}", typeof(T).Name, code);
+                Logger.LogError(e, "Failed to delete entity of type {EntityType} by code {Code}", typeof(T).Name, code);
                 return new Result()
                 {
                     IsSuccess = false,

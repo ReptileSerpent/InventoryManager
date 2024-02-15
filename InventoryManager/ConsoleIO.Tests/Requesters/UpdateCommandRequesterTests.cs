@@ -25,12 +25,12 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
                     .Returns(newCategoryCode)
                     .Returns(newDescription);
                 var mockDatabaseController = new Mock<IDatabaseController>();
-                Category originalCategory = new Category() { Id = 1, Code = "CATEGORY1", Name = "Category 1" };
-                Category newCategory = new Category() { Id = 2, Code = "CATEGORY2", Name = "Category 2" };
+                Category originalCategory = new() { Id = 1, Code = "CATEGORY1", Name = "Category 1" };
+                Category newCategory = new() { Id = 2, Code = "CATEGORY2", Name = "Category 2" };
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(originalCategory.Code, out originalCategory)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newCategory.Code, out newCategory)).Returns(new Result() { IsSuccess = true });
                 var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
-                Product product = new Product() { Id = 1, Code = "PRODUCT1", Name = "Product 1", Price = 1000u, Category = originalCategory, Description = "Description 1" };
+                Product product = new() { Id = 1, Code = "PRODUCT1", Name = "Product 1", Price = 1000u, Category = originalCategory, Description = "Description 1" };
 
                 var actualResult = requester.RequestPropertyValues(product);
 
@@ -51,7 +51,7 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
                     .Returns(newName);
                 var mockDatabaseController = new Mock<IDatabaseController>();
                 var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
-                Category category = new Category() { Id = 1, Code = "CATEGORY1", Name = "Category 1" };
+                Category category = new() { Id = 1, Code = "CATEGORY1", Name = "Category 1" };
 
                 var actualResult = requester.RequestPropertyValues(category);
 
@@ -68,12 +68,12 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
                 mockConsole.SetupSequence(x => x.ReadLine())
                     .Returns(newLocationCode);
                 var mockDatabaseController = new Mock<IDatabaseController>();
-                Location originalLocation = new Location() { Id = 1, Code = "LOCATION1", Country = "Country", City = "City", Street = "Street" };
-                Location newLocation = new Location() { Id = 1, Code = newLocationCode, Country = "Another country", City = "Another city", Street = "Another street" };
+                Location originalLocation = new() { Id = 1, Code = "LOCATION1", Country = "Country", City = "City", Street = "Street" };
+                Location newLocation = new() { Id = 1, Code = newLocationCode, Country = "Another country", City = "Another city", Street = "Another street" };
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(originalLocation.Code, out originalLocation)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newLocation.Code, out newLocation)).Returns(new Result() { IsSuccess = true });
                 var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
-                Warehouse warehouse = new Warehouse() { Id = 1, Code = "WAREHOUSE1", Location = originalLocation };
+                Warehouse warehouse = new() { Id = 1, Code = "WAREHOUSE1", Location = originalLocation };
 
                 var actualResult = requester.RequestPropertyValues(warehouse);
 
@@ -114,21 +114,21 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
                     .Returns(newWarehouseCode)
                     .Returns(newCount);
                 var mockDatabaseController = new Mock<IDatabaseController>();
-                Category originalCategory = new Category() { Id = 1, Code = "CATEGORY1", Name = "Category 1" };
-                Category newCategory = new Category() { Id = 2, Code = "CATEGORY2", Name = "Category 2" };
-                Product originalProduct = new Product() { Id = 1, Code = "PRODUCT1", Name = "Product 1", Price = 1000u, Category = originalCategory, Description = "Description 1" };
-                Product newProduct = new Product() { Id = 2, Code = newProductCode, Name = "Product 2", Price = 800u, Category = newCategory, Description = "Description 2" };
-                Location originalLocation = new Location() { Id = 1, Code = "LOCATION1", Country = "Country", City = "City", Street = "Street" };
-                Location newLocation = new Location() { Id = 2, Code = "LOCATION2", Country = "Another country", City = "Another city", Street = "Another street" };
-                Warehouse originalWarehouse = new Warehouse() { Id = 1, Code = "WAREHOUSE1", Location = originalLocation };
-                Warehouse newWarehouse = new Warehouse() { Id = 2, Code = newWarehouseCode, Location = newLocation };
+                Category originalCategory = new() { Id = 1, Code = "CATEGORY1", Name = "Category 1" };
+                Category newCategory = new() { Id = 2, Code = "CATEGORY2", Name = "Category 2" };
+                Product originalProduct = new() { Id = 1, Code = "PRODUCT1", Name = "Product 1", Price = 1000u, Category = originalCategory, Description = "Description 1" };
+                Product newProduct = new() { Id = 2, Code = newProductCode, Name = "Product 2", Price = 800u, Category = newCategory, Description = "Description 2" };
+                Location originalLocation = new() { Id = 1, Code = "LOCATION1", Country = "Country", City = "City", Street = "Street" };
+                Location newLocation = new() { Id = 2, Code = "LOCATION2", Country = "Another country", City = "Another city", Street = "Another street" };
+                Warehouse originalWarehouse = new() { Id = 1, Code = "WAREHOUSE1", Location = originalLocation };
+                Warehouse newWarehouse = new() { Id = 2, Code = newWarehouseCode, Location = newLocation };
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(originalProduct.Code, out originalProduct)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newProduct.Code, out newProduct)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(originalWarehouse.Code, out originalWarehouse)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newWarehouse.Code, out newWarehouse)).Returns(new Result() { IsSuccess = true });
                 var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
                 var uintExpectedCount = uint.Parse(newCount);
-                InventoryEntry inventoryEntry = new InventoryEntry() { Id = 1, Product = originalProduct, Warehouse = originalWarehouse, Count = 50 };
+                InventoryEntry inventoryEntry = new() { Id = 1, Product = originalProduct, Warehouse = originalWarehouse, Count = 50 };
 
                 var actualResult = requester.RequestPropertyValues(inventoryEntry);
 
