@@ -66,7 +66,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     deletionResult = new Result()
                     {
                         IsSuccess = false,
-                        ErrorDescription = "Invalid command: " + input[0]
+                        ErrorDescription = $"Invalid command: {input[0]}"
                     };
                     break;
             }

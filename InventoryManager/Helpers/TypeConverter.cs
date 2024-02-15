@@ -69,7 +69,7 @@ namespace InventoryManager.Helpers
                 }
             }
 
-            return new Result() { IsSuccess = false, ErrorDescription = "Invalid input: " + input };
+            return new Result() { IsSuccess = false, ErrorDescription = $"Invalid input: {input}" };
         }
 
         private static Result TryConvertToUint(string input, out uint convertedValue)

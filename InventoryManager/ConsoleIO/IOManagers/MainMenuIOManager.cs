@@ -38,7 +38,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                 if (result.IsSuccess && !result.ReceivedExitCommand)
                     Console.WriteLine("Success");
                 if (!result.IsSuccess)
-                    Console.WriteLine("Error: " + result.ErrorDescription);
+                    Console.WriteLine($"Error: {result.ErrorDescription}");
                 if (result.ReceivedExitCommand)
                     shouldExit = true;
             }

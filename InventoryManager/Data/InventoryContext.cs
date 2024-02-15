@@ -19,7 +19,7 @@ namespace InventoryManager.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var assemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var connectionString = File.ReadAllText(assemblyLocation + "/ConnectionString.txt");
+            var connectionString = File.ReadAllText($"{assemblyLocation}/ConnectionString.txt");
             var serverVersion = new MySqlServerVersion(ServerVersion.AutoDetect(connectionString));
             optionsBuilder.UseLazyLoadingProxies()
                 .UseMySql(connectionString, serverVersion);
