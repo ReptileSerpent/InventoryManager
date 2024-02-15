@@ -1,4 +1,5 @@
 ﻿using InventoryManager.Data.Entities;
+using InventoryManager.Data.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 using Moq;
 using Xunit;
@@ -42,8 +43,7 @@ namespace InventoryManager.Helpers.Tests
             {
                 var mockDatabaseController = new Mock<IDatabaseController>();
                 var input = "-1";
-
-                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out _);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -53,8 +53,7 @@ namespace InventoryManager.Helpers.Tests
             {
                 var mockDatabaseController = new Mock<IDatabaseController>();
                 var input = "1 invalid input";
-
-                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(uint), mockDatabaseController.Object, out _);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -81,8 +80,7 @@ namespace InventoryManager.Helpers.Tests
             {
                 var mockDatabaseController = new Mock<IDatabaseController>();
                 var input = "1 invalid input";
-
-                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(decimal), mockDatabaseController.Object, out object actualObject);
+                var actualResult = TypeConverter.TryConvertStringToType(input, typeof(decimal), mockDatabaseController.Object, out _);
 
                 Assert.False(actualResult.IsSuccess);
             }
@@ -120,14 +118,14 @@ namespace InventoryManager.Helpers.Tests
                 Assert.False(actualResult.IsSuccess);
             }
 
-            public static IEnumerable<object[]> TestData()
+            public static TheoryData<IEntityWithCode> TestData()
             {
-                return new List<object[]>
+                return new()
                 {
-                    new object[] { new Product() },
-                    new object[] { new Category() },
-                    new object[] { new Warehouse() },
-                    new object[] { new Location() }
+                    new Product(),
+                    new Category(),
+                    new Warehouse(),
+                    new Location()
                 };
             }
         }

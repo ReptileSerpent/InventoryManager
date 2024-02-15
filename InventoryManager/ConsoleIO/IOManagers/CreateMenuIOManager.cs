@@ -3,12 +3,13 @@ using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Requesters;
 using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class CreateMenuIOManager : MainMenuIOManager
     {
-        public CreateMenuIOManager(IConsole console, IDatabaseController databaseController) : base(console, databaseController) { }
+        public CreateMenuIOManager(ILogger logger, IConsole console, IDatabaseController databaseController) : base(logger, console, databaseController) { }
 
         public override string CommandsInfo => " === Create entity menu === \nOptions: product, category, warehouse, location, inventory_entry\nCommands: exit";
 
@@ -20,23 +21,23 @@ namespace InventoryManager.ConsoleIO.IOManagers
             {
                 case "product":
                     Product product;
-                    result = new CreateCommandRequester(Console, DatabaseController).RequestPropertyValues<Product>(out product);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out product);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(product) : result;
                 case "category":
                     Category category;
-                    result = new CreateCommandRequester(Console, DatabaseController).RequestPropertyValues<Category>(out category);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out category);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(category) : result;
                 case "warehouse":
                     Warehouse warehouse;
-                    result = new CreateCommandRequester(Console, DatabaseController).RequestPropertyValues<Warehouse>(out warehouse);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out warehouse);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(warehouse) : result;
                 case "location":
                     Location location;
-                    result = new CreateCommandRequester(Console, DatabaseController).RequestPropertyValues<Location>(out location);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out location);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(location) : result;
                 case "inventory_entry":
                     InventoryEntry inventoryEntry;
-                    result = new CreateCommandRequester(Console, DatabaseController).RequestPropertyValues<InventoryEntry>(out inventoryEntry);
+                    result = new CreateCommandRequester(Logger, Console, DatabaseController).RequestPropertyValues(out inventoryEntry);
                     return result.IsSuccess ? DatabaseController.TryCreateEntity(inventoryEntry) : result;
                 case "exit":
                     result = new Result()
@@ -49,7 +50,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     result = new Result()
                     {
                         IsSuccess = false,
-                        ErrorDescription = "Invalid command: " + input[0]
+                        ErrorDescription = $"Invalid command: {input[0]}"
                     };
                     break;
             }

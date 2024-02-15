@@ -1,33 +1,37 @@
 ﻿using InventoryManager.Data;
 using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.DatabaseAccess.Controllers
 {
     internal class DatabaseController : IDatabaseController
     {
-        public DatabaseController()
+        public DatabaseController(ILogger logger, InventoryContext dbContext)
         {
-            dbContext = new InventoryContext();
+            Logger = logger;
+            DbContext = dbContext;
         }
 
-        private InventoryContext dbContext;
+        private ILogger Logger { get; }
+        private InventoryContext DbContext { get; set; }
 
         public Result TryCreateEntity<T>(T entity) where T : class, Data.Interfaces.IEntity
         {
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
+                var repository = new Data.Repositories.Repository<T>(DbContext);
                 var createdEntity = repository.Create(entity);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to create entity of type {EntityType}", typeof(T).Name);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to create entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -38,19 +42,18 @@ namespace InventoryManager.DatabaseAccess.Controllers
 
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
-                var readEntity = repository.ReadById(id);
-                if (readEntity == null)
-                    throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
+                var repository = new Data.Repositories.Repository<T>(DbContext);
+                var readEntity = repository.ReadById(id) ?? throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
                 entity = readEntity;
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to read entity of type {EntityType} by id {Id}", typeof(T).Name, id);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to read entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -61,19 +64,18 @@ namespace InventoryManager.DatabaseAccess.Controllers
 
             try
             {
-                var repository = new Data.Repositories.EntityWithCodeRepository<T>(dbContext);
-                var readEntity = repository.ReadByCode(code);
-                if (readEntity == null)
-                    throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
+                var repository = new Data.Repositories.EntityWithCodeRepository<T>(DbContext);
+                var readEntity = repository.ReadByCode(code) ?? throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
                 entity = readEntity;
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to create entity of type {EntityType} by code {Code}", typeof(T).Name, code);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to read entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -82,17 +84,18 @@ namespace InventoryManager.DatabaseAccess.Controllers
         {
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
+                var repository = new Data.Repositories.Repository<T>(DbContext);
                 var updatedEntity = repository.Update(entity);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to update entity of type {EntityType}", typeof(T).Name);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to update entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -101,17 +104,18 @@ namespace InventoryManager.DatabaseAccess.Controllers
         {
             try
             {
-                var repository = new Data.Repositories.Repository<T>(dbContext);
+                var repository = new Data.Repositories.Repository<T>(DbContext);
                 repository.DeleteById(id);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to delete entity of type {EntityType} by id {Id}", typeof(T).Name, id);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to delete entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -120,17 +124,18 @@ namespace InventoryManager.DatabaseAccess.Controllers
         {
             try
             {
-                var repository = new Data.Repositories.EntityWithCodeRepository<T>(dbContext);
+                var repository = new Data.Repositories.EntityWithCodeRepository<T>(DbContext);
                 repository.DeleteByCode(code);
-                dbContext = new InventoryContext();
+                DbContext = new InventoryContext();
                 return new Result() { IsSuccess = true };
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to delete entity of type {EntityType} by code {Code}", typeof(T).Name, code);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to delete entity: {e.Message}. See the log file for the detailed exception and stack trace."
                 };
             }
         }

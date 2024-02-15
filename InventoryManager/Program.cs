@@ -1,5 +1,9 @@
 ﻿using InventoryManager.ConsoleIO.Wrappers;
+using InventoryManager.Data;
 using InventoryManager.DatabaseAccess.Controllers;
+using InventoryManager.Helpers;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace InventoryManager
 {
@@ -7,11 +11,25 @@ namespace InventoryManager
     {
         static void Main(string[] args)
         {
-            var databaseController = new DatabaseController();
-            var console = new ConsoleWrapper();
+            var logger = LoggerCreator.CreateLogger();
+            try
+            {
+                logger.LogInformation("InventoryManager started");
+                var databaseController = new DatabaseController(logger, new InventoryContext());
+                var console = new ConsoleWrapper();
 
-            var IOManager = new ConsoleIO.IOManagers.MainMenuIOManager(console, databaseController);
-            IOManager.ExecuteIO();
+                var IOManager = new ConsoleIO.IOManagers.MainMenuIOManager(logger, console, databaseController);
+                IOManager.ExecuteIO();
+            }
+            catch (Exception e)
+            {
+                logger.LogCritical(e, "Unhandled exception");
+            }
+            finally
+            {
+                logger.LogInformation("Closing InventoryManager");
+                Log.CloseAndFlush();
+            }
         }
     }
 }

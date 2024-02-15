@@ -1,19 +1,23 @@
 ﻿using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class CreateCommandRequester
     {
-        public CreateCommandRequester(IConsole console, IDatabaseController databaseController)
+        public CreateCommandRequester(ILogger logger, IConsole console, IDatabaseController databaseController)
         {
+            Logger = logger;
             Console = console;
             DatabaseController = databaseController;
         }
 
-        private IDatabaseController DatabaseController { get; }
+        private ILogger Logger { get; }
         private IConsole Console { get; }
+        private IDatabaseController DatabaseController { get; }
+        
 
         /// <summary>
         /// Requests property values from Console, except for Id.
@@ -36,8 +40,7 @@ namespace InventoryManager.ConsoleIO.Requesters
                         shouldKeepAsking = false;
                         continue;
                     }
-                    object convertedValue;
-                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out convertedValue);
+                    var result = TypeConverter.TryConvertStringToType(input, property.PropertyType, DatabaseController, out object convertedValue);
                     if (result.IsSuccess)
                     {
                         property.SetValue(entity, convertedValue);
