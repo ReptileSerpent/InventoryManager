@@ -1,17 +1,20 @@
 ﻿using InventoryManager.Helpers;
 using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class MainMenuIOManager : IIOManager
     {
-        public MainMenuIOManager(IConsole console, IDatabaseController databaseController)
+        public MainMenuIOManager(ILogger logger, IConsole console, IDatabaseController databaseController)
         {
+            Logger = logger;
             Console = console;
             DatabaseController = databaseController;
         }
 
+        protected ILogger Logger { get; }
         protected IConsole Console { get; }
         protected IDatabaseController DatabaseController { get; }
 
@@ -48,16 +51,16 @@ namespace InventoryManager.ConsoleIO.IOManagers
             switch (lowercaseCommand)
             {
                 case "create":
-                    var createCommandIOManager = new CreateMenuIOManager(Console, DatabaseController);
+                    var createCommandIOManager = new CreateMenuIOManager(Logger, Console, DatabaseController);
                     return createCommandIOManager.ExecuteIO();
                 case "read":
-                    var readCommandIOManager = new ReadMenuIOManager(Console, DatabaseController);
+                    var readCommandIOManager = new ReadMenuIOManager(Logger, Console, DatabaseController);
                     return readCommandIOManager.ExecuteIO();
                 case "update":
-                    var updateCommandIOManager = new UpdateMenuIOManager(Console, DatabaseController);
+                    var updateCommandIOManager = new UpdateMenuIOManager(Logger, Console, DatabaseController);
                     return updateCommandIOManager.ExecuteIO();
                 case "delete":
-                    var deleteCommandIOManager = new DeleteMenuIOManager(Console, DatabaseController);
+                    var deleteCommandIOManager = new DeleteMenuIOManager(Logger, Console, DatabaseController);
                     return deleteCommandIOManager.ExecuteIO();
                 case "exit":
                     return new Result()

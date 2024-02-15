@@ -1,17 +1,20 @@
 ﻿using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class UpdateCommandRequester
     {
-        public UpdateCommandRequester(IConsole console, IDatabaseController databaseController)
+        public UpdateCommandRequester(ILogger logger, IConsole console, IDatabaseController databaseController)
         {
+            Logger = logger;
             Console = console;
             DatabaseController = databaseController;
         }
 
+        private ILogger Logger { get; }
         private IConsole Console { get; }
         private IDatabaseController DatabaseController { get; }
 

@@ -3,6 +3,7 @@ using InventoryManager.ConsoleIO.Requesters;
 using InventoryManager.Data.Entities;
 using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -16,6 +17,7 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
             [InlineData("Product 1.1", "800", "CATEGORY2", "Description 2")]
             public void RequestPropertyValues_ValidProduct_ReturnsSuccess(string newName, string newPrice, string newCategoryCode, string newDescription)
             {
+                var mockLogger = new Mock<ILogger>();
                 var mockConsole = new Mock<IConsole>();
                 mockConsole.SetupSequence(x => x.ReadLine())
                     .Returns(newName)
@@ -27,7 +29,7 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
                 Category newCategory = new Category() { Id = 2, Code = "CATEGORY2", Name = "Category 2" };
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(originalCategory.Code, out originalCategory)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newCategory.Code, out newCategory)).Returns(new Result() { IsSuccess = true });
-                var requester = new UpdateCommandRequester(mockConsole.Object, mockDatabaseController.Object);
+                var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
                 Product product = new Product() { Id = 1, Code = "PRODUCT1", Name = "Product 1", Price = 1000u, Category = originalCategory, Description = "Description 1" };
 
                 var actualResult = requester.RequestPropertyValues(product);
@@ -43,11 +45,12 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
             [InlineData("Category 1.1")]
             public void RequestPropertyValues_ValidCategory_ReturnsSuccess(string newName)
             {
+                var mockLogger = new Mock<ILogger>();
                 var mockConsole = new Mock<IConsole>();
                 mockConsole.SetupSequence(x => x.ReadLine())
                     .Returns(newName);
                 var mockDatabaseController = new Mock<IDatabaseController>();
-                var requester = new UpdateCommandRequester(mockConsole.Object, mockDatabaseController.Object);
+                var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
                 Category category = new Category() { Id = 1, Code = "CATEGORY1", Name = "Category 1" };
 
                 var actualResult = requester.RequestPropertyValues(category);
@@ -60,6 +63,7 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
             [InlineData("LOCATION2")]
             public void RequestPropertyValues_ValidWarehouse_ReturnsSuccess(string newLocationCode)
             {
+                var mockLogger = new Mock<ILogger>();
                 var mockConsole = new Mock<IConsole>();
                 mockConsole.SetupSequence(x => x.ReadLine())
                     .Returns(newLocationCode);
@@ -68,7 +72,7 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
                 Location newLocation = new Location() { Id = 1, Code = newLocationCode, Country = "Another country", City = "Another city", Street = "Another street" };
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(originalLocation.Code, out originalLocation)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newLocation.Code, out newLocation)).Returns(new Result() { IsSuccess = true });
-                var requester = new UpdateCommandRequester(mockConsole.Object, mockDatabaseController.Object);
+                var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
                 Warehouse warehouse = new Warehouse() { Id = 1, Code = "WAREHOUSE1", Location = originalLocation };
 
                 var actualResult = requester.RequestPropertyValues(warehouse);
@@ -81,13 +85,14 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
             [InlineData("Another country", "Another city", "Another street")]
             public void RequestPropertyValues_ValidLocation_ReturnsSuccess(string newCountry, string newCity, string newStreet)
             {
+                var mockLogger = new Mock<ILogger>();
                 var mockConsole = new Mock<IConsole>();
                 mockConsole.SetupSequence(x => x.ReadLine())
                     .Returns(newCountry)
                     .Returns(newCity)
                     .Returns(newStreet);
                 var mockDatabaseController = new Mock<IDatabaseController>();
-                var requester = new UpdateCommandRequester(mockConsole.Object, mockDatabaseController.Object);
+                var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
                 var location = new Location() { Id = 1, Code = "LOCATION1", Country = "Country", City = "City", Street = "Street" };
 
                 var actualResult = requester.RequestPropertyValues(location);
@@ -102,6 +107,7 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
             [InlineData("PRODUCT2", "WAREHOUSE2", "20")]
             public void RequestPropertyValues_ValidInventoryEntry_ReturnsSuccess(string newProductCode, string newWarehouseCode, string newCount)
             {
+                var mockLogger = new Mock<ILogger>();
                 var mockConsole = new Mock<IConsole>();
                 mockConsole.SetupSequence(x => x.ReadLine())
                     .Returns(newProductCode)
@@ -120,7 +126,7 @@ namespace InventoryManager.ConsoleIO.Tests.Requesters
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newProduct.Code, out newProduct)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(originalWarehouse.Code, out originalWarehouse)).Returns(new Result() { IsSuccess = true });
                 mockDatabaseController.Setup(x => x.TryReadEntityByCode(newWarehouse.Code, out newWarehouse)).Returns(new Result() { IsSuccess = true });
-                var requester = new UpdateCommandRequester(mockConsole.Object, mockDatabaseController.Object);
+                var requester = new UpdateCommandRequester(mockLogger.Object, mockConsole.Object, mockDatabaseController.Object);
                 var uintExpectedCount = uint.Parse(newCount);
                 InventoryEntry inventoryEntry = new InventoryEntry() { Id = 1, Product = originalProduct, Warehouse = originalWarehouse, Count = 50 };
 

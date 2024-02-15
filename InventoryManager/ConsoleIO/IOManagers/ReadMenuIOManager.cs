@@ -4,12 +4,13 @@ using InventoryManager.ConsoleIO.Requesters;
 using System.Text;
 using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
     internal class ReadMenuIOManager : MainMenuIOManager
     {
-        public ReadMenuIOManager(IConsole console, IDatabaseController databaseController) : base(console, databaseController) { }
+        public ReadMenuIOManager(ILogger logger, IConsole console, IDatabaseController databaseController) : base(logger, console, databaseController) { }
 
         public override string CommandsInfo => " === Read entity menu === \nEntities readable by code: product, category, warehouse, location\nEntities readable by id: inventory_entry\nCommands: exit";
 
@@ -22,7 +23,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
             {
                 case "product":
                     string productCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Product>(out productCode);
+                    requestResult = new IdentificationRequester(Logger, Console, DatabaseController).RequestCode<Product>(out productCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(productCode, out Product product);
@@ -31,7 +32,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "category":
                     string categoryCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Category>(out categoryCode);
+                    requestResult = new IdentificationRequester(Logger, Console, DatabaseController).RequestCode<Category>(out categoryCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(categoryCode, out Category category);
@@ -40,7 +41,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "warehouse":
                     string warehouseCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Warehouse>(out warehouseCode);
+                    requestResult = new IdentificationRequester(Logger, Console, DatabaseController).RequestCode<Warehouse>(out warehouseCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(warehouseCode, out Warehouse warehouse);
@@ -49,7 +50,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "location":
                     string locationCode;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestCode<Location>(out locationCode);
+                    requestResult = new IdentificationRequester(Logger, Console, DatabaseController).RequestCode<Location>(out locationCode);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(locationCode, out Location location);
@@ -58,7 +59,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                     break;
                 case "inventory_entry":
                     uint inventoryEntryId;
-                    requestResult = new IdentificationRequester(Console, DatabaseController).RequestId<InventoryEntry>(out inventoryEntryId);
+                    requestResult = new IdentificationRequester(Logger, Console, DatabaseController).RequestId<InventoryEntry>(out inventoryEntryId);
                     if (!requestResult.IsSuccess)
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityById(inventoryEntryId, out InventoryEntry inventoryEntry);

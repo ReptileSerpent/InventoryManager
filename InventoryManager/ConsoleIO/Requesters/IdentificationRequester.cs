@@ -1,19 +1,22 @@
 ﻿using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.ConsoleIO.Requesters
 {
     internal class IdentificationRequester
     {
-        public IdentificationRequester(IConsole console, IDatabaseController databaseController)
+        public IdentificationRequester(ILogger logger, IConsole console, IDatabaseController databaseController)
         {
+            Logger = logger;
             Console = console;
             DatabaseController = databaseController;
         }
 
-        private IDatabaseController DatabaseController { get; }
+        private ILogger Logger { get; }
         private IConsole Console { get; }
+        private IDatabaseController DatabaseController { get; }
 
         internal Result RequestCode<T>(out string code)
         {

@@ -1,16 +1,19 @@
 ﻿using InventoryManager.Data;
 using InventoryManager.DatabaseAccess.Interfaces;
 using InventoryManager.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace InventoryManager.DatabaseAccess.Controllers
 {
     internal class DatabaseController : IDatabaseController
     {
-        public DatabaseController()
+        public DatabaseController(ILogger logger)
         {
+            Logger = logger;
             dbContext = new InventoryContext();
         }
 
+        private ILogger Logger { get; }
         private InventoryContext dbContext;
 
         public Result TryCreateEntity<T>(T entity) where T : class, Data.Interfaces.IEntity
@@ -24,10 +27,11 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to create entity of type {0}", typeof(T).Name);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to create entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -47,10 +51,11 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to read entity of type {0} by id {1}", typeof(T).Name, id);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to read entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -70,10 +75,11 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e, "Failed to create entity of type {0} by code {1}", typeof(T).Name, code);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to read entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -89,10 +95,11 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e, $"Failed to update entity of type {0}", typeof(T).Name);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to update entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -108,10 +115,11 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e, $"Failed to delete entity of type {0} by id {1}", typeof(T).Name, id);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to delete entity: {e.Message} See the log file for the detailed exception and stack trace."
                 };
             }
         }
@@ -127,10 +135,11 @@ namespace InventoryManager.DatabaseAccess.Controllers
             }
             catch (Exception e)
             {
+                Logger.LogError(e, $"Failed to delete entity of type {0} by code {1}", typeof(T).Name, code);
                 return new Result()
                 {
                     IsSuccess = false,
-                    ErrorDescription = e.ToString()
+                    ErrorDescription = $"Failed to delete entity: {e.Message}. See the log file for the detailed exception and stack trace."
                 };
             }
         }
