@@ -5,6 +5,7 @@ using System.Text;
 using InventoryManager.ConsoleIO.Interfaces;
 using InventoryManager.DatabaseAccess.Interfaces;
 using Microsoft.Extensions.Logging;
+using InventoryManager.Data.Interfaces;
 
 namespace InventoryManager.ConsoleIO.IOManagers
 {
@@ -28,7 +29,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(productCode, out Product product);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(product));
+                        Console.WriteLine(GenerateFormattedPropertyValuesString(product));
                     break;
                 case "category":
                     string categoryCode;
@@ -37,7 +38,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(categoryCode, out Category category);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(category));
+                        Console.WriteLine(GenerateFormattedPropertyValuesString(category));
                     break;
                 case "warehouse":
                     string warehouseCode;
@@ -46,7 +47,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(warehouseCode, out Warehouse warehouse);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(warehouse));
+                        Console.WriteLine(GenerateFormattedPropertyValuesString(warehouse));
                     break;
                 case "location":
                     string locationCode;
@@ -55,7 +56,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityByCode(locationCode, out Location location);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(location));
+                        Console.WriteLine(GenerateFormattedPropertyValuesString(location));
                     break;
                 case "inventory_entry":
                     uint inventoryEntryId;
@@ -64,7 +65,7 @@ namespace InventoryManager.ConsoleIO.IOManagers
                         return requestResult;
                     readResult = DatabaseController.TryReadEntityById(inventoryEntryId, out InventoryEntry inventoryEntry);
                     if (readResult.IsSuccess)
-                        Console.WriteLine(GenerateDisplayablePropertyValues(inventoryEntry));
+                        Console.WriteLine(GenerateFormattedPropertyValuesString(inventoryEntry));
                     break;
                 case "exit":
                     readResult = new Result()
@@ -85,12 +86,22 @@ namespace InventoryManager.ConsoleIO.IOManagers
             return readResult;
         }
 
-        private string GenerateDisplayablePropertyValues<T>(T entity)
+        private string GenerateFormattedPropertyValuesString<T>(T entity)
         {
             var stringBuilder = new StringBuilder();
             var properties = typeof(T).GetProperties();
             foreach (var property in properties)
-                stringBuilder.Append($"{property.Name} - {property.GetValue(entity)}\n");
+            {
+                if (property.PropertyType.IsAssignableTo(typeof(IEntityWithCode)))
+                {
+                    var linkedEntity = property.GetValue(entity);
+                    var code = ((IEntityWithCode)linkedEntity!).Code;
+                    stringBuilder.Append($"{property.Name} - {code}\n");
+                }
+                else
+                    stringBuilder.Append($"{property.Name} - {property.GetValue(entity)}\n");
+            }
+
             return stringBuilder.ToString();
         }
     }
