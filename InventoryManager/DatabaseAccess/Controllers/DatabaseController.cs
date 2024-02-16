@@ -43,7 +43,14 @@ namespace InventoryManager.DatabaseAccess.Controllers
             try
             {
                 var repository = new Data.Repositories.Repository<T>(DbContext);
-                var readEntity = repository.ReadById(id) ?? throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
+                var readEntity = repository.ReadById(id);
+                if (readEntity == null)
+                    return new Result()
+                    {
+                        IsSuccess = false,
+                        ErrorDescription = $"Couldn't find entity of type {typeof(T).Name} with id {id}."
+                    };
+
                 entity = readEntity;
                 return new Result() { IsSuccess = true };
             }
@@ -65,7 +72,14 @@ namespace InventoryManager.DatabaseAccess.Controllers
             try
             {
                 var repository = new Data.Repositories.EntityWithCodeRepository<T>(DbContext);
-                var readEntity = repository.ReadByCode(code) ?? throw new InvalidOperationException("The read operation unexpectedly returned a null entity.");
+                var readEntity = repository.ReadByCode(code);
+                if (readEntity == null)
+                    return new Result()
+                    {
+                        IsSuccess = false,
+                        ErrorDescription = $"Couldn't find entity of type {typeof(T).Name} with code {code}."
+                    };
+
                 entity = readEntity;
                 return new Result() { IsSuccess = true };
             }
